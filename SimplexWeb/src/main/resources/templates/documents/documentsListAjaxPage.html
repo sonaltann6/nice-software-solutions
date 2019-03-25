@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+ <html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body id="body">
+	<div 
+		th:each="document, rowStat : ${DOCUMENTS_LIST}"
+		th:unless="${DOCUMENTS_LIST == null}" 
+		class="file-box">
+		<!-- <a th:href="@{/documents/documentManagerController/downloadDocumentById?documentId=} + ${document.documentDetailId}"> -->
+		<div class="file" th:title="${document.documentDownloadByName +'.'+ document.documentExtension + ' (size : ' + document.documentSizeSmart} +')'" 
+			th:attr="data-document-detail-id=${document.documentDetailId}, data-doc-url=@{/documents/documentManagerController/downloadDocumentById?documentId=} + ${document.documentDetailId}"
+			onclick="downloadDocument(this)">
+			<a href="#"> <span class="corner"></span>
+				<div class="icon">
+					<i class="fa fa-file"></i>
+				</div>
+				<div class="file-name">
+					<!-- <span class="file-name-text" th:text="${#strings.substring(document.documentDownloadByName,0,1)}"></span> <br/> --> 
+					<span class="file-name-text" th:text="${document.documentDownloadByName}"></span> <br/> 
+					<small class="file-added-date">Added: <span th:text="${#dates.format(document.documentUploadTimestamp, 'MMM dd, yyyy')}"></span></small>
+				</div>
+			</a>
+		</div>
+	</div>
+</body>
+</html>
