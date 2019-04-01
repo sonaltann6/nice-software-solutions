@@ -19,6 +19,8 @@ import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.utility.Utility;
 import com.nss.simplexweb.utility.document.model.Document;
 import com.nss.simplexweb.utility.document.service.DocumentService;
+import com.nss.simplexweb.utility.mail.EmailController;
+import com.nss.simplexweb.utility.mail.MailBean;
 import com.nss.simplexweb.utility.pdf.PdfGeneratorUtilController;
 
 @Service("poDetailService")
@@ -38,6 +40,9 @@ public class PODetailService {
 
 	@Autowired
 	private PdfGeneratorUtilController pdfGeneratorUtilController;
+	
+	@Autowired
+	private EmailController emailController;
 
 	@Value("${file.po.po.file}")
 	private String PO_PO_FILE_UPLOADED_FOLDER_PATH;
@@ -127,6 +132,11 @@ public class PODetailService {
 				documentService.saveDocumentDetails(document);
 			}
 		}
+	}
+	
+	public String emailPurchaseORder(Long poId, String poNumber, MailBean mailBean) {
+		PODetail poDetail = poDetailRepository.findByPoIdAndPoNumber(poId, poNumber);
+		return emailController.sendPurchaseOrderQuotation(poDetail, mailBean);
 	}
 
 	public PODetail getPODetailsByPoIdAndPoNumber(Long poId, String poNumber) {

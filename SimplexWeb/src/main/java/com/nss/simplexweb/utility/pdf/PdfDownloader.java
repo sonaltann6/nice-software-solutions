@@ -32,6 +32,7 @@ public class PdfDownloader {
 				response.setHeader("Content-Disposition", "attachment; filename="+filename+".pdf"+"");
 				outStream.flush();
 				outStream.write(os.toByteArray());
+				outStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -25,6 +25,7 @@ import com.nss.simplexweb.enums.DISTRIBUTER;
 import com.nss.simplexweb.enums.DOCUMENT;
 import com.nss.simplexweb.enums.DOCUMENT_CATEGORY_TYPE;
 import com.nss.simplexweb.enums.PROJECT;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.DistributerService;
 import com.nss.simplexweb.utility.document.model.Document;
@@ -44,6 +45,9 @@ public class DocumentManagerController {
 	
 	@Autowired
 	private DocumentCategoriesService documentCategoriesService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getDocumentManagerPage(/*@RequestParam("documentCategoryId") Long documentCategoryId,
@@ -122,11 +126,12 @@ public class DocumentManagerController {
             HttpServletRequest request) {
 		
 		User uploader = SessionUtility.getUserFromSession(request);
-		
+		Document document = null;
     	 if (files==null || files.length<1) {
              redirectAttributes.addFlashAttribute(PROJECT.ERROR_MSG.name(), "Please select a file to upload");
          }else {
-        	 documentUploadService.uploadDocumentAccordingToCategory(files, documentOwnerPartner, documentCategoryId, uploader); 
+        	 document = documentUploadService.uploadDocumentAccordingToCategory(files, documentOwnerPartner, documentCategoryId, uploader); 
+        	 notificationService.saveNewDocumentNotification(document, 4);
          }
     	 
     	 return PROJECT.SUCCESS_MSG.name();

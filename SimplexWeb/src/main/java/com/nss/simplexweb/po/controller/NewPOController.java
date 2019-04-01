@@ -28,6 +28,7 @@ import com.nss.simplexweb.enums.PO_TRACKING;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.ROLE;
 import com.nss.simplexweb.enums.SHIPMENT_TERMS;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.paymentterm.model.PaymentTerms;
 import com.nss.simplexweb.paymentterm.service.PaymentTermsService;
 import com.nss.simplexweb.po.model.PODetail;
@@ -73,6 +74,8 @@ public class NewPOController {
 	@Autowired
 	private ProductModelTypeService productModelTypeService;
 	
+	@Autowired
+	private NotificationService notificationService;
 
 	@RequestMapping(value = "/placeOrder", method = RequestMethod.GET)
 	public ModelAndView placeNewOrder(HttpServletRequest request) {
@@ -104,6 +107,7 @@ public class NewPOController {
 		poDetail.setRequester(currentUser);
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		poDetailService.savePODocuments(files, poDetail, currentUser);
+		notificationService.saveNewPONotification(poDetail, 3);
 		return "redirect:/po/newPOController/getPODetails?poId="+poDetail.getPoId()+"&poNumber="+poDetail.getPoNumber();
 	}
 	

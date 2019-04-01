@@ -19,6 +19,8 @@ import com.nss.simplexweb.enquiry.template.model.EnquiryTemplateBean;
 import com.nss.simplexweb.enquiry.template.service.EnquiryTemplateService;
 import com.nss.simplexweb.enquiry.template.service.TemplatePresetsService;
 import com.nss.simplexweb.enums.ENQUIRY;
+import com.nss.simplexweb.enums.PROJECT;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.UserService;
 import com.nss.simplexweb.utility.mail.MailBean;
@@ -38,6 +40,9 @@ public class GlobalTemplateRestController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@GetMapping(value = "/getGlobalTemplate")
 	public Map<String, List<?>> getGlobalTemplate() {
@@ -76,7 +81,8 @@ public class GlobalTemplateRestController {
 		}
 		if(enquiryTemplateBean != null) {
 			enquiryTemplateService.saveNewEnquiry(enquiryTemplateBean);
-		}		
+		}	
+		notificationService.saveNewEnquiryNotification(enquiryTemplateBean, 2);
 		return enquiryTemplateBean;
 	}
 	
@@ -94,13 +100,19 @@ public class GlobalTemplateRestController {
 	}
 	
 	@PostMapping(value = "/emailGlobalTemplateQuotation")
-	public String emailGlobalTemplateQuotation(@RequestParam("enquiryId")Long enquiryId, @RequestParam("enquiryNumber")String enquiryNumber, MailBean mailBean) {
-		return enquiryTemplateService.emailGlobalTemplateEnquiryQuotation(enquiryId, enquiryNumber, mailBean);
+	public Map<String, Object> emailGlobalTemplateQuotation(@RequestParam("enquiryId")Long enquiryId, @RequestParam("enquiryNumber")String enquiryNumber, @RequestBody MailBean mailBean) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		enquiryTemplateService.emailGlobalTemplateEnquiryQuotation(enquiryId, enquiryNumber, mailBean);
+		map.put(PROJECT.SUCCESS_MSG.name(), enquiryTemplateService.getEnquiryDetailsByEnquiryId(enquiryId));
+		return map;
 	}
 	
 	@GetMapping(value = "/downloadGlobalTemplateQuotation")
 	public void downloadGlobalTemplateQuotation(@RequestParam("enquiryId")Long enquiryId, @RequestParam("enquiryNumber")String enquiryNumber, HttpServletResponse response) {
+		/*Map<String, Object> map = new HashMap<String, Object>();*/
 		enquiryTemplateService.downloadGlobalTemplateEnquiryQuotation(enquiryId, enquiryNumber, response);
+		//map.put(PROJECT.SUCCESS_MSG.name(), enquiryTemplateService.getEnquiryDetailsByEnquiryId(enquiryId));
+		//return map;
 	}
 	
 	@GetMapping(value = "/getEnquiryBean")

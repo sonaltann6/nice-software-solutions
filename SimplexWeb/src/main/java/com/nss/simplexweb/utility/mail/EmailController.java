@@ -15,6 +15,7 @@ import com.nss.simplexweb.enums.COMPANY;
 import com.nss.simplexweb.enums.ENQUIRY;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.USER;
+import com.nss.simplexweb.po.model.PODetail;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.MainComapanyService;
 import com.nss.simplexweb.utility.Utility;
@@ -24,6 +25,8 @@ import com.nss.simplexweb.utility.pdf.PdfGeneratorUtilController;
 public class EmailController {
 	
 	private String ENQUIRY_FILE_NAME_PREFIX = "Simplex Enquiry Details - ";
+	
+	private String PURCHASE_ORDER_NAME_PREFIX = "Simplex PO Details -";
 	
 	@Autowired
     private MailService mailService;
@@ -105,5 +108,46 @@ public class EmailController {
 		return retMsg;
 	}
 
-	
+	//Purchase order email
+		public String sendPurchaseOrderQuotation(PODetail poDetail, MailBean mailbean) {
+			String retMsg = PROJECT.SUCCESS_MSG.name();
+			try {
+				//Mail Config
+			        Properties mailprops = Utility.propertiesFileReader("mail-params");
+			        //mailbean.setSubject(mailprops.getProperty("mail.sub.registration"));	//Do not set subject here as user will enter it
+			        mailbean.setFrom(mailprops.getProperty("mail.from.mailid"));
+			        mailbean.setTemplateName("new-purchase-order-mail-body");
+		        
+		        //Params
+			        ObjectMapper objectMapper = new ObjectMapper();
+					objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+					objectMapper.setDateFormat(new SimpleDateFormat("MMM dd, yyyy"));
+					HashMap<String, HashMap<String, String>> bodyparams = new HashMap<>();
+					
+					HashMap<String, HashMap<String, String>> poDetailBeanMap = new HashMap<>();
+					poDetailBeanMap.put(PROJECT.CONTEXT_ + ENQUIRY.ENQUIRY ,objectMapper.convertValue(poDetail, HashMap.class));	//POJO to Map				
+					
+					HashMap<String, HashMap<String, String>> mainComapnyMap = new HashMap<>();
+					mainComapnyMap.put(PROJECT.CONTEXT_ + COMPANY.COMPANY.name(), objectMapper.convertValue(mainComapanyService.getMainComapnyInfo(), HashMap.class));	//POJO to Map
+					
+					bodyparams.putAll(poDetailBeanMap);
+					bodyparams.putAll(mainComapnyMap);
+			        mailbean.setBodyParams(bodyparams);
+			        
+			   //Pdf Attachment
+			        ArrayList<EmailAttachment> mailAttachmentList = new ArrayList<>();
+			        EmailAttachment emailAttachment = new EmailAttachment();
+			        emailAttachment.setAttachmentName(PURCHASE_ORDER_NAME_PREFIX + poDetail.getPoNumber());
+			        emailAttachment.setAttachmentType("application/pdf");
+			        emailAttachment.setAttachmentBytes(pdfGeneratorUtilController.generatePurchaseOrderPdf(poDetail));
+			        mailAttachmentList.add(emailAttachment);
+			        mailbean.setMailAttachmentList(mailAttachmentList);
+			        
+			   retMsg = mailService.prepareAndSend(mailbean);
+			}catch (Exception e) {
+				retMsg = PROJECT.ERROR_MSG.name();
+				e.getMessage();
+			}
+			return retMsg;
+		}
 }

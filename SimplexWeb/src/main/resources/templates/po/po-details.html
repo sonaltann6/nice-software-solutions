@@ -214,12 +214,12 @@
 				               </tr>
 			               </thead>
 			               <tbody>
-			               		<tr th:each="poItem, rowStat : ${PO_DETAIL.poItmesList}">
+			               		<tr th:each="poItem, rowStat : ${PO_DETAIL.poItemsList}">
 			                        <td th:text="${rowStat.index + 1}"></td>
 			                        <td th:text="${poItem.poItemNumber}"></td>
 			                        <td th:text="${poItem.poItemDesc}"></td>
 			                        <td th:text="${poItem.productModelType.modelTypeName}"></td>
-			                        <td th:text="${poItem.poItmeQty}"></td>
+			                        <td th:text="${poItem.poItemQty}"></td>
 			                        <td th:text="${poItem.poItemRate}"></td>
 			                        <td th:text="${poItem.poItemAmount}"></td>
 			                    </tr>          

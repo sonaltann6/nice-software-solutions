@@ -32,5 +32,9 @@ public class POTrackingHistoryService {
 		// TODO Auto-generated method stub
 		return poTrackingHistoryRepository.findByPoIdOrderByPoTrackingStatusUpdateTimestampDesc(poDetail);
 	}
+	
+	public POTrackingHistory getPOTrackingHistory(PODetail poId) {
+		return poTrackingHistoryRepository.findByPoId(poId);
+	}
 
 }

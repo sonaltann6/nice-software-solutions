@@ -16,4 +16,6 @@ public interface POTrackingHistoryRepository extends JpaRepository<POTrackingHis
 	ArrayList<POTrackingHistory> findByPoIdOrderByPoTrackingStatusUpdateTimestampDesc(PODetail poId);
 	
 	POTrackingHistory findByPoTrackingHistoryId(Long poTrackingHistoryId);
+	
+	POTrackingHistory findByPoId(PODetail poId);
 }

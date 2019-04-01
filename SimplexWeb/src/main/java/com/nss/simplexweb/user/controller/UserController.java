@@ -1,5 +1,7 @@
 package com.nss.simplexweb.user.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nss.simplexweb.SessionUtility;
 import com.nss.simplexweb.enums.COUNTRY;
+import com.nss.simplexweb.enums.NOTIFICATION;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.USER;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.repository.CountryRepository;
 import com.nss.simplexweb.user.service.DistributerService;
@@ -33,7 +38,8 @@ public class UserController {
 	@Autowired
 	private CountryRepository countryRepository;
 	
-	
+	@Autowired
+	private NotificationService notificationService;
 
     @RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
     public ModelAndView login(){
@@ -71,6 +77,7 @@ public class UserController {
         } else {
         	user = userService.processUseNameBeforeSaving(user);
         	distributerService.saveNewDistributerWithoutAutoGeneratePassword(user);
+        	notificationService.saveNewRegistrationNotification(user, 1);
             mav
             	.addObject(PROJECT.SUCCESS_MSG.name(), "User has been registered successfully")
             	.addObject(USER.USER.name(), new User())
@@ -107,10 +114,9 @@ public class UserController {
     }
     
     @RequestMapping(value={"user/home"}, method = RequestMethod.GET)
-    public ModelAndView userHome(HttpSession session){
-        ModelAndView mav = new ModelAndView();
-        
-        mav
+    public ModelAndView userHome(HttpSession session, HttpServletRequest request){
+    	ModelAndView mav = new ModelAndView();
+    	mav
         	.setViewName("home");
         return mav;
     }
@@ -121,6 +127,19 @@ public class UserController {
         
         mav
         	.setViewName("home");
+        return mav;
+    }
+    
+    @RequestMapping(value={"/notifications"}, method = RequestMethod.GET)
+    public ModelAndView getNotifications(HttpSession session, HttpServletRequest request) throws JsonProcessingException{
+    	User user = SessionUtility.getUserFromSession(request);
+        ModelAndView mav = new ModelAndView();
+        ArrayList<List<?>> list = new ArrayList<List<?>>();
+		list = notificationService.getNotificationByGroup(user.getUserId());
+        mav
+        	.addObject(NOTIFICATION.NOTIFICATION_LIST.name(), list)
+        	.setViewName("notifications.html");
+        System.out.println(list.toString());
         return mav;
     }
     

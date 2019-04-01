@@ -81,7 +81,7 @@ public class DocumentManagerService {
 		return documentList;
 	}
 
-	public void uploadDocumentAccordingToCategory(MultipartFile[] files, User documentOwnerPartner,
+	public Document uploadDocumentAccordingToCategory(MultipartFile[] files, User documentOwnerPartner,
 			Long documentCategoryId, User uploader) {
 		// TODO Auto-generated method stub
 		String documentCategoryAbbr = documentCategoriesService
@@ -101,21 +101,21 @@ public class DocumentManagerService {
 					document.setDocumentParentId(documentCategory.getDocumentCategoryId());
 					document.setDocumentParentEntityType(documentCategory.getDocumentCategoryAbbr());
 					document.setDocumentStorePath(documentCategory.getDocumentFolderBasePath());
-					// document.setDocumentStoreByName(Utility.generateDocumentNameAccordingToCategory(documentCategory.getDocumentCategoryAbbr(),
-					// null) + "." + document.getDocumentExtension());
+					document.setDocumentStoreByName(Utility.generateDocumentNameAccordingToCategory(documentCategory.getDocumentCategoryAbbr(),null) + "." + document.getDocumentExtension());
 					document.setDocumentUploader(uploader);
 					document.setDocumentOwnerPartner(documentOwnerPartner);
 					document.setDocumentDownloadByName(document.getDocumentOriginalNameWithoutExtension());
 
 					// Save
 					Utility.singleFileUpload(file, document.getDocumentStorePath(), document.getDocumentStoreByName());
-					documentService.saveDocumentDetails(document);
+					document = documentService.saveDocumentDetails(document);
 				}
 			}
 		}
+		return document;
 	}
 
-	public void uploadDocumentByCategory(MultipartFile file, User documentOwnerPartner, Long documentCategoryId, User uploader) {
+	public Document uploadDocumentByCategory(MultipartFile file, User documentOwnerPartner, Long documentCategoryId, User uploader) {
 		// TODO Auto-generated method stub
 		String documentCategoryAbbr = documentCategoriesService.getDocumentCategoryByDocumentCategoryId(documentCategoryId).getDocumentCategoryAbbr();
 		if (documentCategoryAbbr.equalsIgnoreCase(DOCUMENT_CATEGORY_TYPE.ALL_DOCUMENTS.name())) {
@@ -137,9 +137,10 @@ public class DocumentManagerService {
 
 				// Save
 				Utility.singleFileUpload(file, document.getDocumentStorePath(), document.getDocumentStoreByName());
-				documentService.saveDocumentDetails(document);
+				document = documentService.saveDocumentDetails(document);
 			}
 		}
+		return document;
 	}
 
 	public Document getDocumentDetailsById(Long documentId) {

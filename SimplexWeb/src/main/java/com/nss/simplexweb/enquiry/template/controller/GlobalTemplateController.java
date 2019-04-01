@@ -21,6 +21,7 @@ import com.nss.simplexweb.enquiry.template.service.EnquiryTemplateService;
 import com.nss.simplexweb.enquiry.template.service.TemplatePresetsService;
 import com.nss.simplexweb.enums.ENQUIRY;
 import com.nss.simplexweb.enums.MAIL;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.utility.mail.MailBean;
 
@@ -35,6 +36,9 @@ public class GlobalTemplateController {
 	
 	@Autowired
 	private EnquiryTemplateService enquiryTemplateService;
+	
+	@Autowired
+	private NotificationService notificationService;
 
 	@RequestMapping(value = "/getGlobalTemplate", method = RequestMethod.GET)
 	public ModelAndView getGlobalTemplate() {
@@ -79,6 +83,7 @@ public class GlobalTemplateController {
 		if(enquiryBean != null) {
 			enquiryBean = enquiryTemplateService.saveNewEnquiry(enquiryBean);
 		}
+		notificationService.saveNewEnquiryNotification(enquiryBean, 2);
 		return new ModelAndView("redirect:" + "/enquiry/globalTemplateController/getGlobalTemplateQuotation?enquiryId="+enquiryBean.getEnquiryId()+"&enquiryNumber="+enquiryBean.getEnquiryNumber());
 	}
 	

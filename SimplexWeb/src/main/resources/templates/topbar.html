@@ -68,45 +68,55 @@
                   </li>
               </ul>
           </li>
-          <li class="dropdown">
+          <!-- th:text="${notifParentList}" -->
+          <!-- <span th:with="notifParentList=${@notificationService.getNotificationByGroup(session.USER.userId)}" th:unless="${session == null}" ></span>
+         <span th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}"></span> 
+          <span th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}" th:text="${list[1][0].notificationId}"></span>
+         <span th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}" th:text="${list[2][0].notificationId}"></span>
+         <span th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}" th:text="${list[3][0].notificationId}"></span>
+         <span th:text="${#lists.size(list)}"></span>
+         <span th:text="${#lists.size(count[0])} + ${#lists.size(count[1])} + ${#lists.size(count[2])} + ${#lists.size(count[3])}"></span> -->
+         
+         <li class="dropdown">
               <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                  <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
+                  <i class="fa fa-bell"></i> 
+                   <span class="label label-primary" th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}" th:text="${#lists.size(list[0])} + ${#lists.size(list[1])} + ${#lists.size(list[2])} + ${#lists.size(list[3])}"></span>
               </a>
               <ul class="dropdown-menu dropdown-alerts">
-                  <li>
-                      <a href="mailbox.html">
-                          <div>
-                              <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                              <span class="pull-right text-muted small">4 minutes ago</span>
-                          </div>
-                      </a>
+                  <li th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}">
+                  	 <a th:if="${list[0]!=null and !list[0].empty}" th:href= "@{/notifications}">
+                  		<div>
+                  			<i th:class="${'fa fa-' + list[0][0].entityTable.notificationIcon + ' fa-fw'}"></i> <span  th:text = "${list[0][0].entityTable.notificationParentTypeName}" ></span><br>
+                  			<span class="pull-right text-muted small" th:text = "${#lists.size(list[0])} + ' '  + ${list[0][0].entityTable.notificationDesc}"></span><br>
+                  		</div>
+                  	</a>
                   </li>
                   <li class="divider"></li>
-                  <li>
-                      <a href="profile.html">
-                          <div>
-                              <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                              <span class="pull-right text-muted small">12 minutes ago</span>
-                          </div>
-                      </a>
+                  <li th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}">
+                  	 <a th:if="${list[1]!=null and !list[1].empty}" th:href= "@{/notifications}">
+                  		<div>
+                  			<i th:class="${'fa fa-' + list[1][0].entityTable.notificationIcon + ' fa-fw'}"></i> <span th:text = "${list[1][0].entityTable.notificationParentTypeName}" ></span><br>
+                  			<span class="pull-right text-muted small" th:text = "${#lists.size(list[1])} + ' '  + ${list[1][0].entityTable.notificationDesc}"></span><br>
+                  		</div>
+                  	</a>
                   </li>
                   <li class="divider"></li>
-                  <li>
-                      <a href="grid_options.html">
-                          <div>
-                              <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                              <span class="pull-right text-muted small">4 minutes ago</span>
-                          </div>
-                      </a>
+                  <li th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}">
+                  	 <a th:if="${list[2]!=null and !list[2].empty}" th:href= "@{/notifications}">
+                  		<div>
+                  			<i th:class="${'fa fa-' + list[2][0].entityTable.notificationIcon + ' fa-fw'}"></i> <span th:text = "${list[2][0].entityTable.notificationParentTypeName}" ></span><br>
+                  			<span class="pull-right text-muted small" th:text = "${#lists.size(list[2])} + ' '  + ${list[2][0].entityTable.notificationDesc}"></span><br>
+                  		</div>
+                  	</a>
                   </li>
                   <li class="divider"></li>
-                  <li>
-                      <div class="text-center link-block">
-                          <a href="notifications.html">
-                              <strong>See All Alerts</strong>
-                              <i class="fa fa-angle-right"></i>
-                          </a>
-                      </div>
+                  <li th:with="list = ${@notificationService.getNotificationByGroup(session.USER.userId)}">
+                  	 <a th:if="${list[3]!=null and !list[3].empty}" th:href= "@{/notifications}">
+                  		<div>
+                  			<i th:class="${'fa fa-' + list[3][0].entityTable.notificationIcon + ' fa-fw'}"></i> <span  th:text = "${list[3][0].entityTable.notificationParentTypeName}" ></span><br>
+                  			<span class="pull-right text-muted small" th:text = "${#lists.size(list[3])} + ' '  + ${list[3][0].entityTable.notificationDesc}"></span><br>
+                  		</div>
+                  	</a>
                   </li>
               </ul>
           </li>

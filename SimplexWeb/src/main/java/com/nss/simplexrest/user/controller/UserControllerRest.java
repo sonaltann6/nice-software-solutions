@@ -23,6 +23,7 @@ import com.nss.simplexrest.custom.exception.AlreadyExistsException;
 import com.nss.simplexrest.custom.exception.NotFoundException;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.USER;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.DistributerService;
 import com.nss.simplexweb.user.service.UserService;
@@ -39,6 +40,9 @@ public class UserControllerRest {
 	
 	@Autowired
     private DistributerService distributerService;
+	
+	@Autowired
+	private NotificationService notificationService;
 
     @PostMapping(value="/login")
     @ApiOperation(value = "Returns user details to be persist in application scope"
@@ -67,6 +71,7 @@ public class UserControllerRest {
         } else {
         	user = userService.processUseNameBeforeSaving(user);
             user = distributerService.saveNewDistributerWithoutAutoGeneratePassword(user);
+            notificationService.saveNewRegistrationNotification(user, 1);
         }
         return user;
     }

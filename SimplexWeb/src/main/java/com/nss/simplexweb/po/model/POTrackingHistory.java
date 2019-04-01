@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nss.simplexweb.user.model.User;
 
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class POTrackingHistory implements Serializable {
     @JoinColumn(name = "po_id")
 	private PODetail poId;
 	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "po_status_id")
 	private POStatus poStatus;

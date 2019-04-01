@@ -191,7 +191,7 @@ function setNavigation() {
 	    var path = window.location.pathname;
 	    path = path.replace(/\/$/, "");
 	    path = decodeURIComponent(path);
-	    $(".nav a").each(function () {
+	    $(".nav.metismenu a").each(function () {
 	        var href = $(this).attr('href');
 	        if(href != undefined && href != 'undefined'){
 		        if (path.substring(0, href.length) === href) {

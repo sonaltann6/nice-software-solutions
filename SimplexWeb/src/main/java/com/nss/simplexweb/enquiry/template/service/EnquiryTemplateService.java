@@ -35,9 +35,6 @@ public class EnquiryTemplateService {
 	private EnquiryTemplateRepository enquiryTemplateRepository;
 	
 	@Autowired
-	private POStatusRepository pOStatusRepository;
-	
-	@Autowired
 	private EnquiryGlobalTemplateLevelOneCalculationsService enquiryGlobalTemplateLevelOneCalculationsService;
 	
 	@Autowired
@@ -106,7 +103,6 @@ public class EnquiryTemplateService {
 			EnquiryGlobalTemplateLevelTwoUPanelCalculationsService enquiryGlobalTemplateLevelTwoUPanelCalculationsService) {
 		
 		this.enquiryTemplateRepository = enquiryTemplateRepository;
-		this.pOStatusRepository = pOStatusRepository;
 		this.enquiryGlobalTemplateLevelOneProductCalculationsService = enquiryGlobalTemplateLevelOneProductCalculationsService;
 		this.enquiryGlobalTemplateLevelOneFabricCalculationsService = enquiryGlobalTemplateLevelOneFabricCalculationsService;
 		this.enquiryGlobalTemplateLevelOneTopcCalculationsService = enquiryGlobalTemplateLevelOneTopcCalculationsService;

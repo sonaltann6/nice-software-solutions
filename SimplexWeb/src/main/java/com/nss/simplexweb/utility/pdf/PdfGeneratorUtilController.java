@@ -100,7 +100,34 @@ public class PdfGeneratorUtilController {
 	 * PO
 	 * 
 	 * */
-	
+	//purchase order PDF generator
+		public byte[] generatePurchaseOrderPdf(PODetail poDetail) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+			objectMapper.setDateFormat(new SimpleDateFormat("MMM dd, yyyy"));
+			HashMap<String, HashMap<String, String>> bodyparams = new HashMap<>();
+			
+			HashMap<String, HashMap<String, String>> poDetailBean = new HashMap<>();
+			poDetailBean.put(PROJECT.CONTEXT_ + ENQUIRY.ENQUIRY ,objectMapper.convertValue(poDetail, HashMap.class));	//POJO to Map
+			
+			HashMap<String, HashMap<String, String>> mainComapnyMap = new HashMap<>();
+			mainComapnyMap.put(PROJECT.CONTEXT_ + COMPANY.COMPANY.name(), objectMapper.convertValue(mainComapanyService.getMainComapnyInfo(), HashMap.class));	//POJO to Map
+			
+			
+			bodyparams.putAll(poDetailBean);
+			bodyparams.putAll(mainComapnyMap);
+			try {
+				//Build pdf content
+		        String pdfContent = pdfContentBuilder.buildPdfContent(bodyparams, PDF_TEMPLATE_PATH + File.separator + TEMPLATE_CONSTANT.PO_DETAILS_PDF_TEMPLATE);
+		        
+		        //Generate PDF
+				return pdfDownloader.pdfByteStream(pdfContent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
 	public void downloadPOAsPDF(PODetail poDetailBean, HttpServletResponse response) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);

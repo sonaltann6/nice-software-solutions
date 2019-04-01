@@ -10,8 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-
 
 /**
  * The persistent class for the notifications_tbl database table.
@@ -29,28 +27,17 @@ public class NotificationsTbl implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="notification_id")
-	private String notificationId;
+	private Long notificationId;
 
-	private byte isRead;
-
-	@Column(name="notification_desc")
-	private String notificationDesc;
-
-	@Column(name="notification_icon")
-	private String notificationIcon;
+	@Column(name="is_read")
+	private boolean isRead;
 
 	@Column(name="notification_parent_entity_id")
-	private BigInteger notificationParentEntityId;
+	private Long notificationParentEntityId;
 
 	@ManyToOne
 	@JoinColumn(name="notification_parent_entity_type_id")
 	private NotificationParentEntityTable entityTable;
-
-	@Column(name="notification_title")
-	private String notificationTitle;
-
-	@Column(name="on_click_url")
-	private String onClickUrl;
 
 	@ManyToOne
 	@JoinColumn(name="user_id")

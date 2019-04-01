@@ -30,6 +30,7 @@ import com.nss.simplexweb.enums.DISTRIBUTER;
 import com.nss.simplexweb.enums.DOCUMENT;
 import com.nss.simplexweb.enums.DOCUMENT_CATEGORY_TYPE;
 import com.nss.simplexweb.enums.PROJECT;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.DistributerService;
 import com.nss.simplexweb.user.service.UserService;
@@ -56,6 +57,9 @@ public class DocumentManagerRestController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@GetMapping(value = "/getDocumentManager")
 	@ResponseBody
@@ -91,10 +95,12 @@ public class DocumentManagerRestController {
 		String json = new String(Base64.getDecoder().decode(base64Json));
 		ObjectMapper mapper = new ObjectMapper();
 		User documentOwnerPartner = mapper.readValue(json, User.class);
+		Document document = null;
 		if (file==null) {
             redirectAttributes.addFlashAttribute(PROJECT.ERROR_MSG.name(), "Please select a file to upload");
         }else {
-       	 documentUploadService.uploadDocumentByCategory(file, documentOwnerPartner, documentCategoryId, uploader); 
+        document =documentUploadService.uploadDocumentByCategory(file, documentOwnerPartner, documentCategoryId, uploader); 
+       	notificationService.saveNewDocumentNotification(document, 4);
         }
    	 
    	 return PROJECT.SUCCESS_MSG.name();

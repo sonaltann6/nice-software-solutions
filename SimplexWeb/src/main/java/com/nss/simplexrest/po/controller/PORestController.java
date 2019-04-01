@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,8 +34,10 @@ import com.nss.simplexweb.enums.ENQUIRY;
 import com.nss.simplexweb.enums.PAYMENT_TERMS;
 import com.nss.simplexweb.enums.PO;
 import com.nss.simplexweb.enums.PO_TRACKING;
+import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.ROLE;
 import com.nss.simplexweb.enums.SHIPMENT_TERMS;
+import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.paymentterm.model.PaymentTerms;
 import com.nss.simplexweb.paymentterm.service.PaymentTermsService;
 import com.nss.simplexweb.po.model.PODetail;
@@ -49,6 +52,7 @@ import com.nss.simplexweb.user.service.MainComapanyService;
 import com.nss.simplexweb.user.service.UserService;
 import com.nss.simplexweb.utility.document.model.Document;
 import com.nss.simplexweb.utility.document.service.DocumentService;
+import com.nss.simplexweb.utility.mail.MailBean;
 
 import io.swagger.annotations.Api;
 
@@ -83,6 +87,10 @@ public class PORestController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private NotificationService notificationService;
+	
 	
 	@GetMapping(value = "/getMyPORequestsList")
 	public ArrayList<PODetail> getMyPORequestsList(@RequestParam ("userId") Long userId){
@@ -139,6 +147,8 @@ public class PORestController {
 	public Map<String, Object> trackPO(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber) throws JSONException {
 		Map<String, Object> map = new HashMap<String, Object>();
 		PODetail poDetail = poDetailService.getPODetailsByPoIdAndPoNumber(poId, poNumber);
+		List<PODetail> poDetailList = new ArrayList<PODetail>();
+		poDetailList.add(poDetail);
 		ArrayList<POTrackingHistory> poTrackingHistoryList = poTrackingHistoryService.getPOTrackingHistoryListForPODesc(poDetail);
 		
 		map.put(PO_TRACKING.PO_TRACKING_HISTORY_LIST.name(), poTrackingHistoryList);
@@ -153,8 +163,9 @@ public class PORestController {
 	}
 
 	@GetMapping(value = "/getMyPORequestsList/getUpdatePOStatusPage")
-	public Map<String, Object> getUpdatedPOStatusPage(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber, @RequestBody User user) throws JSONException {
+	public Map<String, Object> getUpdatedPOStatusPage(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber, @RequestParam("userId") Long userId) throws JSONException {
 		Map<String, Object> map = new HashMap<String, Object>();
+		User user = userService.findUserByUserId(userId);
 		PODetail poDetail = poDetailService.getPODetailsByPoIdAndPoNumber(poId, poNumber);
 		ArrayList<POStatus> poNextApplicableStatusType = poStatusService.getPONextApplicableStatusType(poDetail.getPoStatus());
 		ArrayList<POTrackingHistory> poTrackingHistoryList = poTrackingHistoryService.getPOTrackingHistoryListForPODesc(poDetail);
@@ -181,9 +192,9 @@ public class PORestController {
 		return map;
 	}
 	
-	@GetMapping(value = "/processNewPO")
-	public PODetail processNewPO(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber, @RequestBody User user) {
-		
+	@PostMapping(value = "/processNewPO")
+	public PODetail processNewPO(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber, @RequestParam("userId") Long userId) {
+		User user  = userService.findUserByUserId(userId);
 		PODetail poDetail = poDetailService.getPODetailsByPoIdAndPoNumber(poId, poNumber);
 		poDetail.setProcessor(user);
 		poDetail.setStatusUpdatedBy(user);
@@ -200,48 +211,54 @@ public class PORestController {
 		return poDetail;
 	}
 	
-	/*@PostMapping(value = "/saveNewOrder")
+	@PostMapping(value = "/saveNewOrderWithOutFile")
 	@ResponseBody
-	//@ApiOperation(value = "Make a POST request to upload the file", produces = "application/json", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public PODetail saveNewOrder(@RequestBody PODetail poDetail, @RequestParam(value = "ionicfile", required = false) MultipartFile files, HttpServletRequest request) {
+	public PODetail saveNewOrder(@RequestBody PODetail poDetail, HttpServletRequest request) {
 		@SuppressWarnings("unused")
 		User currentUser = userService.findUserByUserId(poDetail.getRequester().getUserId());
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
-		//poDetailService.savePODocuments(files, poDetail, currentUser);
+		notificationService.saveNewPONotification(poDetail, 3);
 		return poDetail;
-	}*/
+	}
 	
 	@PostMapping(value = "/saveNewOrder")
 	@ResponseBody
-	public PODetail saveNewOrder(
-			@RequestParam("ionicfile") MultipartFile file, HttpServletRequest request, @RequestParam("poDetail") String base64Json) throws JsonParseException, JsonMappingException, IOException {
-		
+	public PODetail saveNewOrder(@RequestParam(value = "ionicfile", required = false) MultipartFile file, 
+			HttpServletRequest request,
+			@RequestParam("poDetail") String base64Json) throws JsonParseException, JsonMappingException, IOException {
 		
 		String json = new String(Base64.getDecoder().decode(base64Json));		
-		
-		//PODetail poDetail = new Gson().fromJson(poBean, PODetail.class);
-		
-		//JsonNode jsonNode = Utility.convertJsonFormat(poBean);
 		ObjectMapper mapper = new ObjectMapper();
-		//mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		PODetail poDetail = mapper.readValue(json, PODetail.class);
 		
 		System.out.println(poDetail.toString());
 		User currentUser = userService.findUserByUserId(poDetail.getRequester().getUserId());
-		//poDetail.setRequester(currentUser);
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		poDetailService.savePODocument(file, poDetail, currentUser);
+		notificationService.saveNewPONotification(poDetail, 3);
  		return new PODetail();
 	}
 	
 	@PutMapping(value = "/updatePOStatus")
-	public void updatePOStatus(@RequestBody POTrackingHistory poTrackingHistory, @RequestBody User user) {
+	public String updatePOStatus(@RequestBody POTrackingHistory poTrackingHistory, @RequestParam("userId") Long userId) throws JSONException {
+		JSONObject obj = new JSONObject();
 		PODetail poDetail = poDetailService.getPODetailsByPoId(poTrackingHistory.getPoId().getPoId());
+		User user = userService.findUserByUserId(userId);
 		poDetail.setStatusUpdatedBy(user);
 		poDetail.setPoStatus(poTrackingHistory.getPoStatus());
 		poDetailService.updatePOStatus(poDetail);
 		
 		poTrackingHistory.setUpdatedBy(user);
 		poTrackingHistoryService.addPOTrackingEntry(poTrackingHistory);
+		
+		obj.put(PROJECT.SUCCESS_MSG.name(),poTrackingHistory);
+		return obj.toString();
+	}
+	
+	@PostMapping(value = "/emailPurchaseOrder")
+	public Map<String, Object> emailPurchaseOrder(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber, @RequestBody MailBean mailBean){
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		return map;
 	}
 }

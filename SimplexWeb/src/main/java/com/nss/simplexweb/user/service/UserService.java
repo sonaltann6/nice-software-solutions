@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.io.Files;
-import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.ROLE;
 import com.nss.simplexweb.user.model.Role;
 import com.nss.simplexweb.user.model.User;
@@ -44,9 +43,6 @@ public class UserService implements UserServiceInterface {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
-	private RoleService roleService;
-	
-	@Autowired
 	private EmailController emailController;
 	
 	@Value("${file.user.profile.image}")
@@ -61,6 +57,7 @@ public class UserService implements UserServiceInterface {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 	
+	@SuppressWarnings("unused")
 	private Role predictRoleAbbrByCompanyName(String companyName) {
 		String roleAbbr = ROLE.DIST.name();	//By default, Distributer role will be set on signup
 		

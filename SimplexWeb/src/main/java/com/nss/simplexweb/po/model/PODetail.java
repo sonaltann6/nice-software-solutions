@@ -112,6 +112,7 @@ public class PODetail implements Serializable {
 	private Double poTotalAmount;
 		
 	@ManyToOne(fetch = FetchType.EAGER)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "po_status_id")
 	private POStatus poStatus;
 	
