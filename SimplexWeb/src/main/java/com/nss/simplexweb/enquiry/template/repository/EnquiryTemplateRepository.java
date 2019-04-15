@@ -13,6 +13,8 @@ public interface EnquiryTemplateRepository extends JpaRepository<EnquiryTemplate
 
 	EnquiryTemplateBean findByEnquiryId(Long enquiryId);
 	
+	EnquiryTemplateBean findByEnquiryIdAndRequesterUserId(Long enquiryId, Long userId);
+	
 	EnquiryTemplateBean findByEnquiryIdAndEnquiryNumber(Long enquiryId, String enquiryNumber);
 	
 	ArrayList<EnquiryTemplateBean> findByRequester(User user);

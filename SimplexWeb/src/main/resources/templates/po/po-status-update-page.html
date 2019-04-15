@@ -111,7 +111,7 @@
                                     	<label>Update Status to</label> 
                                     	<select id="poUpdateStatusSelect"
 											data-placeholder="Choose status..."
-											class="form-control" tabindex="0" required="" name="poStatus" readonly="readonly">
+											class="form-control" tabindex="0" name="poStatus" readonly="readonly" required>
 											<option th:each="poStatus : ${PO_NEXT_APPLICABLE_STATUS_TYPE}"
 												th:value="${poStatus.poStatusId}" th:text="${poStatus.poStatusName}" selected>
 											</option>
@@ -122,8 +122,8 @@
                                     	<input type="text" placeholder="Comment/Remark" class="form-control text-capitalize" 
                                     		name="poTrackingComment">
                                     </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit">
+                                    <div th:each="poStatus : ${PO_NEXT_APPLICABLE_STATUS_TYPE}">
+                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" th:disabled="${poStatus.poStatusName == 'PO Confirmed' && session.USER.role.roleName != 'Director'}" type="submit">
                                         	<strong>Update</strong>
                                         </button>
                                     </div>
@@ -135,7 +135,7 @@
 								<ul class="list-group">
 								  <li class="list-group-item">
 								  	<strong>Partner : </strong>
-								  	<span th:text="${PO_DETAIL.requester.companyName}"></span>
+								  	<span th:text="${PO_DETAIL.requester.company.companyName}"></span>
 								  </li>
 								  <li class="list-group-item"><strong>Order Placed By : </strong>
 								  	<div class="ibox" style="margin-bottom: 0px; display: inline-block;">
@@ -150,7 +150,7 @@
 								              <li class="divider"></li>
 								              <li>
 								                  <a href="#">
-								                     <span th:text="${PO_DETAIL.requester.companyName}"></span>
+								                     <span th:text="${PO_DETAIL.requester.company.companyName}"></span>
 								                  </a>
 								              </li>
 								              <li class="divider"></li>

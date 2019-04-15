@@ -44,8 +44,8 @@ public class PaymentMasterRestController {
 	@GetMapping(value = "/getPaymentTermsListByPartnerId")
 	public HashMap<String, ArrayList<?>> getPaymentTermsListByPartnerId(@RequestParam ("partnerId") Long partnerId) {
 		HashMap<String, ArrayList<?>> map = new HashMap<>();
-		map.put(PAYMENT_TERMS.PYAMENT_TERMS_LIST_FOR_PARTNER.name(), paymentTermsService.getPaymentTermsListByPartnerId(partnerId));
-		map.put(PAYMENT_TERMS.PYAMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList());
+		map.put(PAYMENT_TERMS.PAYMENT_TERMS_LIST_FOR_PARTNER.name(), paymentTermsService.getPaymentTermsListByPartnerId(partnerId));
+		map.put(PAYMENT_TERMS.PAYMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList());
 		return map;
 	}
 	

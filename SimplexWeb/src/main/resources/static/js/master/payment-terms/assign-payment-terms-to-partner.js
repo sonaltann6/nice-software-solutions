@@ -29,38 +29,39 @@ $(function() {
     		},
             success:function(data) {
             	try{
+            		
             		$paymentTermSelect.find('option').remove();
             		$('.dual_select').bootstrapDualListbox('refresh', true);
 
-            		var PYAMENT_TERMS_LIST = data.PYAMENT_TERMS_LIST;
-            		var PYAMENT_TERMS_LIST_FOR_PARTNER = data.PYAMENT_TERMS_LIST_FOR_PARTNER;
+            		var PAYMENT_TERMS_LIST = data.PAYMENT_TERMS_LIST;
+            		var PAYMENT_TERMS_LIST_FOR_PARTNER = data.PAYMENT_TERMS_LIST_FOR_PARTNER;
             		var TO_BE_SELECTED_TERMS_ARRAY = [];
             		
-            		var PYAMENT_TERMS_LIST_LENGTH = 0;
-            		var PYAMENT_TERMS_LIST_FOR_PARTNER_LENGTH = 0;
+            		var PAYMENT_TERMS_LIST_LENGTH = 0;
+            		var PAYMENT_TERMS_LIST_FOR_PARTNER_LENGTH = 0;
             		
-            		if(PYAMENT_TERMS_LIST != null){
-            			PYAMENT_TERMS_LIST_LENGTH = PYAMENT_TERMS_LIST.length;
+            		if(PAYMENT_TERMS_LIST != null){
+            			PAYMENT_TERMS_LIST_LENGTH = PAYMENT_TERMS_LIST.length;
             		}
             		
-            		if(PYAMENT_TERMS_LIST_FOR_PARTNER != null){
-            			PYAMENT_TERMS_LIST_FOR_PARTNER_LENGTH = PYAMENT_TERMS_LIST_FOR_PARTNER.length
+            		if(PAYMENT_TERMS_LIST_FOR_PARTNER != null){
+            			PAYMENT_TERMS_LIST_FOR_PARTNER_LENGTH = PAYMENT_TERMS_LIST_FOR_PARTNER.length
             		}
             		
-            		for(var i=0; i<PYAMENT_TERMS_LIST_LENGTH; i++){
+            		for(var i=0; i<PAYMENT_TERMS_LIST_LENGTH; i++){
             			debugger
-            			for(var j=0; j<PYAMENT_TERMS_LIST_FOR_PARTNER_LENGTH; j++){
-                			if(PYAMENT_TERMS_LIST[i].paymentTermId == PYAMENT_TERMS_LIST_FOR_PARTNER[j].paymentTermId){
-                				TO_BE_SELECTED_TERMS_ARRAY.push(PYAMENT_TERMS_LIST_FOR_PARTNER[j].paymentTermId);
+            			for(var j=0; j<PAYMENT_TERMS_LIST_FOR_PARTNER_LENGTH; j++){
+                			if(PAYMENT_TERMS_LIST[i].paymentTermId == PAYMENT_TERMS_LIST_FOR_PARTNER[j].paymentTermId){
+                				TO_BE_SELECTED_TERMS_ARRAY.push(PAYMENT_TERMS_LIST_FOR_PARTNER[j].paymentTermId);
                 			}
                 		}
             		}
-            		for(var i=0; i<PYAMENT_TERMS_LIST_LENGTH; i++){
-        				if(jQuery.inArray(PYAMENT_TERMS_LIST[i].paymentTermId, TO_BE_SELECTED_TERMS_ARRAY)!='-1' ){
-        					var $option_html = "<option selected value='"+ PYAMENT_TERMS_LIST[i].paymentTermId +"'>"+ PYAMENT_TERMS_LIST[i].paymentTermCode +"</option>";
+            		for(var i=0; i<PAYMENT_TERMS_LIST_LENGTH; i++){
+        				if(jQuery.inArray(PAYMENT_TERMS_LIST[i].paymentTermId, TO_BE_SELECTED_TERMS_ARRAY)!='-1' ){
+        					var $option_html = "<option selected value='"+ PAYMENT_TERMS_LIST[i].paymentTermId +"'>"+ PAYMENT_TERMS_LIST[i].paymentTermCode +"</option>";
                 			$paymentTermSelect.append($option_html);
         				}else{
-        					var $option_html = "<option value='"+ PYAMENT_TERMS_LIST[i].paymentTermId +"'>"+ PYAMENT_TERMS_LIST[i].paymentTermCode +"</option>";
+        					var $option_html = "<option value='"+ PAYMENT_TERMS_LIST[i].paymentTermId +"'>"+ PAYMENT_TERMS_LIST[i].paymentTermCode +"</option>";
                 			$paymentTermSelect.append($option_html);
         				}
             		}

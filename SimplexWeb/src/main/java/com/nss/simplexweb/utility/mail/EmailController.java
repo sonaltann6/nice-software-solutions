@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.nss.simplexweb.enquiry.template.model.EnquiryTemplateBean;
 import com.nss.simplexweb.enums.COMPANY;
 import com.nss.simplexweb.enums.ENQUIRY;
+import com.nss.simplexweb.enums.PO;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.USER;
 import com.nss.simplexweb.po.model.PODetail;
@@ -38,6 +39,7 @@ public class EmailController {
 	private PdfGeneratorUtilController pdfGeneratorUtilController;
 
 	//Registration email
+	@SuppressWarnings("unchecked")
 	public void sendRegistrationEmail(User user) {
 		//Mail Config
 	        Properties mailprops = Utility.propertiesFileReader("mail-params");
@@ -66,6 +68,7 @@ public class EmailController {
 	}
 	
 	//New Inquiry Quotation email
+	@SuppressWarnings("unchecked")
 	public String sendNewEnquiryQuotation(EnquiryTemplateBean enquiryTemplateBean, MailBean mailbean) {
 		String retMsg = PROJECT.SUCCESS_MSG.name();
 		try {
@@ -109,6 +112,7 @@ public class EmailController {
 	}
 
 	//Purchase order email
+		@SuppressWarnings("unchecked")
 		public String sendPurchaseOrderQuotation(PODetail poDetail, MailBean mailbean) {
 			String retMsg = PROJECT.SUCCESS_MSG.name();
 			try {
@@ -116,7 +120,7 @@ public class EmailController {
 			        Properties mailprops = Utility.propertiesFileReader("mail-params");
 			        //mailbean.setSubject(mailprops.getProperty("mail.sub.registration"));	//Do not set subject here as user will enter it
 			        mailbean.setFrom(mailprops.getProperty("mail.from.mailid"));
-			        mailbean.setTemplateName("new-purchase-order-mail-body");
+			        mailbean.setTemplateName("po-details");
 		        
 		        //Params
 			        ObjectMapper objectMapper = new ObjectMapper();
@@ -125,7 +129,7 @@ public class EmailController {
 					HashMap<String, HashMap<String, String>> bodyparams = new HashMap<>();
 					
 					HashMap<String, HashMap<String, String>> poDetailBeanMap = new HashMap<>();
-					poDetailBeanMap.put(PROJECT.CONTEXT_ + ENQUIRY.ENQUIRY ,objectMapper.convertValue(poDetail, HashMap.class));	//POJO to Map				
+					poDetailBeanMap.put(PROJECT.CONTEXT_ + PO.PO.name() ,objectMapper.convertValue(poDetail, HashMap.class));	//POJO to Map				
 					
 					HashMap<String, HashMap<String, String>> mainComapnyMap = new HashMap<>();
 					mainComapnyMap.put(PROJECT.CONTEXT_ + COMPANY.COMPANY.name(), objectMapper.convertValue(mainComapanyService.getMainComapnyInfo(), HashMap.class));	//POJO to Map

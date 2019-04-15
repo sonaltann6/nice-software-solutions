@@ -71,7 +71,7 @@ function prepareTableDataSet(PO_DETAIL){
 			var TABLE_ITEM = [];
 			TABLE_ITEM.push(parseInt(i)+1);
 			TABLE_ITEM.push(PO_DETAIL[i].poNumber);
-			TABLE_ITEM.push(PO_DETAIL[i].requester.companyName);
+			TABLE_ITEM.push(PO_DETAIL[i].requester.company.companyName);
 			TABLE_ITEM.push(PO_DETAIL[i].requester.fullName);
 			TABLE_ITEM.push(PO_DETAIL[i].poCreateTimestamp);
 			TABLE_ITEM.push(PO_DETAIL[i].etd);

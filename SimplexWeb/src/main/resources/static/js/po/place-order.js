@@ -46,13 +46,14 @@ $(function(){
 			'</select>',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemNumber" name="poItemsList['+newRowNumber+'].poItemNumber" class="form-control invisible-text-input" style="width:100%" required="required">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemDesc" name="poItemsList['+newRowNumber+'].poItemDesc" class="form-control invisible-text-input" style="width:100%">',
-            '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.productModelType" name="poItemsList['+newRowNumber+'].productModelType" class="form-control invisible-text-input" style="width:100%" required="required">',
+            '<input type="" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.productModelTypeId" name="poItemsList['+newRowNumber+'].productModelType.modelTypeId" class="form-control invisible-text-input" style="width:100%;display:none;">',
+            '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.productModelType"  class="form-control invisible-text-input" style="width:100%" required="required">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemQty" name="poItemsList['+newRowNumber+'].poItemQty" class="form-control invisible-text-input poItemQty" style="width:100%" required="required">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemRate" name="poItemsList['+newRowNumber+'].poItemRate" class="form-control invisible-text-input poItemRate" style="width:100%" required="required" onclick="" readonly="readonly">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemAmount" name="poItemsList['+newRowNumber+'].poItemAmount" class="form-control invisible-text-input" style="width:100%" readonly="readonly">',
             
             '<button type="button" class="btn btn-warning btn-xs addPORowBtn"> <i class="fa fa-plus"></i> </button>'+
-            ' <button type="button" class="btn btn-warning btn-xs removePORowBtn"> <i class="fa fa-minus"></i> </button>'
+            '<button type="button" class="btn btn-warning btn-xs removePORowBtn"> <i class="fa fa-minus"></i> </button>'
         ]).draw( false );
 		rearrangeTableRowsIndexes();
 		$('.table-responsive').css('overflow','visible');
@@ -225,6 +226,7 @@ function calculateTotalAmount(){
 
 //ENQUIRY_NUMBER_LIST on change
 function poItemsListEnquiryNumberChange(obj){
+	console.log(obj);
 	var enquiryId = $(obj).val();
 	var rowNumber = $(obj).data('row-number');
 	//alert(enquiryId);
@@ -257,6 +259,7 @@ function poItemsListEnquiryNumberChange(obj){
 									   '<li><a href="#">Bottom Filling Type : ' +bottomDischargeType+ ',  Bottom Type : '+bottomType+ '</a></li>'
 									   
 			);
+			$("#poItemsList"+rowNumber+"\\.productModelTypeId").val(data.ENQUIRY_HISTORY_LIST.productModelType.modelTypeId);
 			$("#poItemsList"+rowNumber+"\\.productModelType").val(data.ENQUIRY_HISTORY_LIST.productModelType.modelTypeName);
 			$("#poItemsList"+rowNumber+"\\.poItemDesc").val("Product Type : " +data.ENQUIRY_HISTORY_LIST.productType.productTypeName +"Model Type : " +data.ENQUIRY_HISTORY_LIST.productModelType.modelTypeName +"Surface Type : " +data.ENQUIRY_HISTORY_LIST.productSurfaceType.surfaceTypeName 
 																				   +"Length :" +data.ENQUIRY_HISTORY_LIST.surfaceLength +"Width :" +data.ENQUIRY_HISTORY_LIST.surfaceWidth +"Height :" +data.ENQUIRY_HISTORY_LIST.surfaceHeight

@@ -1,6 +1,8 @@
 package com.nss.simplexweb.notifications.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
 import javax.persistence.*;
 
 import com.nss.simplexweb.user.model.User;
@@ -39,7 +41,12 @@ public class NotificationsTbl implements Serializable {
 	@JoinColumn(name="notification_parent_entity_type_id")
 	private NotificationParentEntityTable entityTable;
 
+	private String notifTypeDetail;
+
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
+	
+	@Column(name = "created_timestamp", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private Timestamp createdTimestamp;
 }

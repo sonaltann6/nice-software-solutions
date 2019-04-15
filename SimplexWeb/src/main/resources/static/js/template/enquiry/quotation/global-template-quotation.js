@@ -1,4 +1,7 @@
 $(document).ready(function(){
+	
+	buildNavPath({'Home':'user/home', 'Enquiry':'#', 'Enquiry Quotation':'#'});
+	
 	$('.tagsinput').tagsinput({
         tagClass: 'label label-primary'
     });

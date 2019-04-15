@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nss.simplexrest.custom.exception.AlreadyExistsException;
 import com.nss.simplexrest.custom.exception.NotFoundException;
+import com.nss.simplexweb.company.model.Company;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.enums.USER;
 import com.nss.simplexweb.notifications.service.NotificationService;
@@ -61,14 +62,15 @@ public class UserControllerRest {
     @PostMapping(value = "/registration")
     public User registerDistributer(@RequestBody @Valid User user, BindingResult bindingResult) {
         User userExists = userService.findUserByEmailId(user.getEmail());
+        Company company = userService.checkCompanyCode(user.getCompany().getCompanyUniqueCode());
+        
         if (userExists != null) {
-            bindingResult
-                    .rejectValue("email", "error.user",
-                            "There is already a user registered with the email provided");
-        }
-        if (bindingResult.hasErrors()) {
         	throw new AlreadyExistsException("User", "email : " + user.getEmail(), null);
-        } else {
+        }
+        else if (company == null) {
+        	throw new NotFoundException("Company", "Company Code : " +user.getCompany().getCompanyUniqueCode(), null);
+        }
+        else {
         	user = userService.processUseNameBeforeSaving(user);
             user = distributerService.saveNewDistributerWithoutAutoGeneratePassword(user);
             notificationService.saveNewRegistrationNotification(user, 1);
@@ -166,6 +168,6 @@ public class UserControllerRest {
     	obj.put(PROJECT.SUCCESS_MSG.name(), "Please login again with new password");
     	obj.put(USER.USER.name(), new User());
     	session.invalidate();
-    	return obj;
+    	return obj.toString();
     }
 }

@@ -41,7 +41,7 @@ public class PaymentTermsMaster {
 		mav
 			.addObject(USER.USER.name(), new User())
 			.addObject(PAYMENT_TERMS.PAYMENT_TERMS.name(), new PaymentTerms())
-			.addObject(PAYMENT_TERMS.PYAMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList())
+			.addObject(PAYMENT_TERMS.PAYMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList())
 			.setViewName("master/payment-terms/payment_terms_master");
 		
 		return mav;
@@ -70,7 +70,7 @@ public class PaymentTermsMaster {
 		mav
 			.addObject(USER.USER.name(), new User())
 			.addObject(PAYMENT_TERMS.PAYMENT_TERMS.name(), new PaymentTerms())
-			.addObject(PAYMENT_TERMS.PYAMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList())
+			.addObject(PAYMENT_TERMS.PAYMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList())
 			.addObject(USER.USER_LIST.name(), distributerService.findAllActiveDistributersList())
 			.setViewName("master/payment-terms/assign_payment_terms_to_partners");
 		
@@ -81,8 +81,8 @@ public class PaymentTermsMaster {
 	@ResponseBody 
 	public HashMap<String, ArrayList<?>> getPaymentTermsListByPartnerId(Long partnerId) {
 		HashMap<String, ArrayList<?>> map = new HashMap<>();
-		map.put(PAYMENT_TERMS.PYAMENT_TERMS_LIST_FOR_PARTNER.name(), paymentTermsService.getPaymentTermsListByPartnerId(partnerId));
-		map.put(PAYMENT_TERMS.PYAMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList());
+		map.put(PAYMENT_TERMS.PAYMENT_TERMS_LIST_FOR_PARTNER.name(), paymentTermsService.getPaymentTermsListByPartnerId(partnerId));
+		map.put(PAYMENT_TERMS.PAYMENT_TERMS_LIST.name(), paymentTermsService.getActivePaymentTermsList());
 		return map;
 	}
 

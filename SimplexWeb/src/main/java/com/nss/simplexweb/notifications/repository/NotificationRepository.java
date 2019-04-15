@@ -18,6 +18,5 @@ public interface NotificationRepository extends JpaRepository<NotificationsTbl, 
 	ArrayList<NotificationsTbl> findByIsReadFalse();
 	
 	ArrayList<NotificationsTbl> findByUserUserIdAndIsReadFalse(Long userId);
-	
-	//ArrayList<NotificationsTbl> findByIsReadAndGroupByNotificationParentEntityTable(NotificationParentEntityTable entityTable);
+
 }

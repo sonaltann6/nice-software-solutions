@@ -1,5 +1,6 @@
 package com.nss.simplexweb.po.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,9 +38,13 @@ import com.nss.simplexweb.po.model.POTrackingHistory;
 import com.nss.simplexweb.po.service.PODetailService;
 import com.nss.simplexweb.po.service.POStatusService;
 import com.nss.simplexweb.po.service.POTrackingHistoryService;
+import com.nss.simplexweb.push.notifications.model.PushNotification;
+import com.nss.simplexweb.push.notifications.repository.PushNotificationRepo;
+import com.nss.simplexweb.push.notifications.service.PushNotificationService;
 import com.nss.simplexweb.shipmenterm.service.ShipmentTermsService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.MainComapanyService;
+import com.nss.simplexweb.user.service.UserService;
 import com.nss.simplexweb.utility.document.model.Document;
 import com.nss.simplexweb.utility.document.service.DocumentService;
 
@@ -76,6 +81,15 @@ public class NewPOController {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	PushNotificationService pushNotificationService;
+	
+	@Autowired
+	PushNotificationRepo pushNotificationRepo;
+	
+	@Autowired
+	UserService userService;
 
 	@RequestMapping(value = "/placeOrder", method = RequestMethod.GET)
 	public ModelAndView placeNewOrder(HttpServletRequest request) {
@@ -93,7 +107,7 @@ public class NewPOController {
 		mav
 			.addObject(COMPANY.COMPANY.name(), mainComapanyService.getMainComapnyInfo())
 			.addObject(ENQUIRY.ENQUIRY_HISTORY_LIST, enquiryHistoryList)
-			.addObject(PAYMENT_TERMS.PYAMENT_TERMS_LIST.name(), paymentTermsList)
+			.addObject(PAYMENT_TERMS.PAYMENT_TERMS_LIST.name(), paymentTermsList)
 			.addObject(ENQUIRY.PRODUCT_MODEL_TYPE_LIST, productModelTypeService.getProductModelTypeList())
 			.addObject(SHIPMENT_TERMS.SHIPMENT_TERMS_LIST.name(), shipmentTermsService.getActiveShipmentTermsList())
 			.addObject(PO.PO_DETAIL.name(), new PODetail())
@@ -102,12 +116,14 @@ public class NewPOController {
 	}
 	
 	@RequestMapping(value = "/saveNewOrder", method = RequestMethod.POST)
-	public String saveNewOrder(PODetail poDetail, @RequestParam("poPDFFile") MultipartFile[] files, HttpServletRequest request) {
+	public String saveNewOrder(PODetail poDetail, @RequestParam("poPDFFile") MultipartFile[] files, HttpServletRequest request) throws IOException {
 		User currentUser = SessionUtility.getUserFromSession(request);
 		poDetail.setRequester(currentUser);
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		poDetailService.savePODocuments(files, poDetail, currentUser);
 		notificationService.saveNewPONotification(poDetail, 3);
+		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
+		pushNotificationService.sendPushNotification(pushNotification,3);
 		return "redirect:/po/newPOController/getPODetails?poId="+poDetail.getPoId()+"&poNumber="+poDetail.getPoNumber();
 	}
 	

@@ -76,7 +76,6 @@
 .dataTables_wrapper {
 	padding-bottom: 0px;
 }
-
 </style>
 </head>
 <body id="body">
@@ -119,7 +118,7 @@
 											<p>
 												<span> <strong class="text-navy">P.O.
 														Number:</strong> <input type="text" title="Click to edit"
-													class="invisible-text-input-grey" th:field="*{poNumber}">
+													class="invisible-text-input-grey" th:field="*{poNumber}" required="">
 												</span> <br />
 											</p>
 										</div>
@@ -127,11 +126,12 @@
 										<div class="col-sm-4">
 											<h5>Ship To:</h5>
 											<address>
-												<strong><span th:text="${session.USER.companyName}"
+												<strong><span
+													th:text="${session.USER.company.companyName}"
 													th:unless="${session == null}"
 													class="ENQUIRY-requester-companyName"></span></strong><br> <input
 													type="hidden" th:id="shiptoCompany" th:name="shiptoCompany"
-													th:value="${session.USER.companyName}"
+													th:value="${session.USER.company.companyName}"
 													th:unless="${session == null}"
 													class="ENQUIRY-requester-companyName"> <strong>Contact
 													Person:</strong> <input type="text" th:id="shiptoContactPerson"
@@ -212,7 +212,7 @@
 															required=""
 															class="form-control invisible-text-input po-table-fields">
 																<option value="">Select</option>
-																<option th:each="paymentTerms : ${PYAMENT_TERMS_LIST}"
+																<option th:each="paymentTerms : ${PAYMENT_TERMS_LIST}"
 																	th:value="${paymentTerms.paymentTermId}"
 																	th:text="${paymentTerms.paymentTermCode}"></option>
 														</select> <!-- <input type="text" th:field="*{paymentTerms}" class="form-control invisible-text-input po-table-fields" style="width:100%"> -->
@@ -222,8 +222,7 @@
 															<div class="date-group">
 																<div class="input-group date" style="width: 100%;">
 																	<span class="input-group-addon"
-																		style="padding: 0px; border: none;">
-																		<!-- <i class="fa fa-calendar"></i> -->
+																		style="padding: 0px; border: none;"> <!-- <i class="fa fa-calendar"></i> -->
 																	</span> <input type="text" th:field="*{etd}"
 																		class="form-control invisible-text-input po-table-fields"
 																		placeholder="Expected Date" readonly="readonly">
@@ -285,7 +284,7 @@
 												<option th:each="modelType : ${PRODUCT_MODEL_TYPE_LIST}"
 													th:value="${modelType.modelTypeId}"
 													th:text="${modelType.modelTypeName}"></option>
-											</select> --> 
+											</select> -->
 											<select class="form-control ENQUIRY_NUMBER_LIST"
 												style="display: none;">
 												<option value="">Select</option>
@@ -303,6 +302,7 @@
 														<th>Enquiry No.</th>
 														<th>Item No.</th>
 														<th>Description</th>
+														<th>Model Id</th>
 														<th>Model Type</th>
 														<th>Qty (Unit)</th>
 														<th>Rate ($)</th>

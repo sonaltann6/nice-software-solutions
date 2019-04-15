@@ -1,5 +1,6 @@
 package com.nss.simplexweb.enquiry.template.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,9 @@ import com.nss.simplexweb.enquiry.template.service.TemplatePresetsService;
 import com.nss.simplexweb.enums.ENQUIRY;
 import com.nss.simplexweb.enums.MAIL;
 import com.nss.simplexweb.notifications.service.NotificationService;
+import com.nss.simplexweb.push.notifications.model.PushNotification;
+import com.nss.simplexweb.push.notifications.repository.PushNotificationRepo;
+import com.nss.simplexweb.push.notifications.service.PushNotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.utility.mail.MailBean;
 
@@ -39,6 +43,12 @@ public class GlobalTemplateController {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	PushNotificationService pushNotificationService;
+	
+	@Autowired
+	PushNotificationRepo pushNotificationRepo;
 
 	@RequestMapping(value = "/getGlobalTemplate", method = RequestMethod.GET)
 	public ModelAndView getGlobalTemplate() {
@@ -51,7 +61,7 @@ public class GlobalTemplateController {
 	}
 	
 	@RequestMapping(value = "/saveGlobalTemplateDetails", method = RequestMethod.POST)
-	public ModelAndView saveGlobalTemplateDetails(EnquiryTemplateBean enquiryBean, HttpServletRequest request) {
+	public ModelAndView saveGlobalTemplateDetails(EnquiryTemplateBean enquiryBean, HttpServletRequest request) throws IOException {
 		enquiryBean.setRequester(SessionUtility.getUserFromSession(request));
 		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_4PANEL)) {
 			enquiryTemplateService.performAll4PanelCalculations(enquiryBean);
@@ -84,6 +94,8 @@ public class GlobalTemplateController {
 			enquiryBean = enquiryTemplateService.saveNewEnquiry(enquiryBean);
 		}
 		notificationService.saveNewEnquiryNotification(enquiryBean, 2);
+		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(enquiryBean.getRequester().getUserId());
+		pushNotificationService.sendPushNotification(pushNotification,2);
 		return new ModelAndView("redirect:" + "/enquiry/globalTemplateController/getGlobalTemplateQuotation?enquiryId="+enquiryBean.getEnquiryId()+"&enquiryNumber="+enquiryBean.getEnquiryNumber());
 	}
 	

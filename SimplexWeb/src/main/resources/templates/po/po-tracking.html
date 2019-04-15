@@ -106,35 +106,35 @@
 					                    </div>
 					                    <div class="ibox-content" id="ibox-content">
 					                        <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
-					                            <div class="vertical-timeline-block" th:if="${not #lists.isEmpty(PO_TRACKING_HISTORY_LIST)}" th:each="poTrackingHistory : ${PO_TRACKING_HISTORY_LIST}">
+					                            <di v class="vertical-timeline-block" th:if="${not #lists.isEmpty(PO_TRACKING_HISTORY_LIST)}" th:each="poTrackingHistory : ${PO_TRACKING_HISTORY_LIST}">
 					                                
-					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_DELIVERED'}?'vertical-timeline-icon navy-bg'">
-					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_DELIVERED'}?'fa fa-smile-o'"></i>
+					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'SHIPPED_ON_BOARD'}?'vertical-timeline-icon navy-bg'">
+					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'SHIPPED_ON_BOARD'}?'fa fa-smile-o'"></i>
 					                                </div>
 					                                
-					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_DISPATCHED'}?'vertical-timeline-icon yellow-bg'">
-					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_DISPATCHED'}?'fa fa-ship'"></i>
+					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_SHIPPED'}?'vertical-timeline-icon yellow-bg'">
+					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_SHIPPED'}?'fa fa-ship'"></i>
 					                                </div>
 					                                
-					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_READY'}?'vertical-timeline-icon lazur-bg'">
+					                                <!-- <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_READY'}?'vertical-timeline-icon lazur-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'CONTAINER_READY'}?'fa fa-archive'"></i>
-					                                </div>
+					                                </div> -->
 					                                
-					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'RAILED_OUT'}?'vertical-timeline-icon blue-bg'">
+					                               <!--  <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'RAILED_OUT'}?'vertical-timeline-icon blue-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'RAILED_OUT'}?'fa fa-train'"></i>
-					                                </div>
+					                                </div> -->
 					                                
-					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'UNDER_ICD_EXAMINATION'}?'vertical-timeline-icon navy-bg'">
+					                                <!-- <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'UNDER_ICD_EXAMINATION'}?'vertical-timeline-icon navy-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'UNDER_ICD_EXAMINATION'}?'fa fa-list-alt'"></i>
-					                                </div>
+					                                </div> -->
 					                                
 					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'DISPATCHED_FROM_FACTORY'}?'vertical-timeline-icon yellow-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'DISPATCHED_FROM_FACTORY'}?'fa fa-truck'"></i>
 					                                </div>
 					                                
-					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PRODUCTION_COMPLETE'}?'vertical-timeline-icon lazur-bg'">
+					                                <!-- <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PRODUCTION_COMPLETE'}?'vertical-timeline-icon lazur-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PRODUCTION_COMPLETE'}?'fa fa-shopping-bag'"></i>
-					                                </div>
+					                                </div> -->
 					                                
 					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'UNDER_PRODUCTION'}?'vertical-timeline-icon blue-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'UNDER_PRODUCTION'}?'fa fa-wrench'"></i>
@@ -144,9 +144,9 @@
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PO_CONFIRMED'}?'fa fa-check'"></i>
 					                                </div>
 					                                
-					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PO_UNDER_CONFIRMATION'}?'vertical-timeline-icon yellow-bg'">
+					                                <!-- <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PO_UNDER_CONFIRMATION'}?'vertical-timeline-icon yellow-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PO_UNDER_CONFIRMATION'}?'fa fa-exclamation-circle '"></i>
-					                                </div>
+					                                </div> -->
 					                                
 					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PO_UNDER_PROCESS'}?'vertical-timeline-icon lazur-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'PO_UNDER_PROCESS'}?'fa fa-refresh'"></i>

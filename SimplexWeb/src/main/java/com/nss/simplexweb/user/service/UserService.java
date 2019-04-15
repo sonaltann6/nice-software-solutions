@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.io.Files;
+import com.nss.simplexweb.company.model.Company;
+import com.nss.simplexweb.company.service.impl.CompanyService;
 import com.nss.simplexweb.enums.ROLE;
 import com.nss.simplexweb.user.model.Role;
 import com.nss.simplexweb.user.model.User;
@@ -44,6 +46,9 @@ public class UserService implements UserServiceInterface {
 	
 	@Autowired
 	private EmailController emailController;
+	
+	@Autowired
+	CompanyService companyService;
 	
 	@Value("${file.user.profile.image}")
 	private String PROFILE_PICTURE_UPLOADED_FOLDER_PATH;
@@ -282,4 +287,11 @@ public class UserService implements UserServiceInterface {
 		return userRepository.save(user);
 	}
 	
+	
+	
+	public Company checkCompanyCode(String companyCode) {
+		Company company = companyService.findActiveCompanyByCompanyUniqueCode(companyCode);
+		//System.out.println(company.toString());
+		return company;
+	}
 }

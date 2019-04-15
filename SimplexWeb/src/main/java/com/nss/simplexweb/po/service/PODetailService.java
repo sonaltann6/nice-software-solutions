@@ -134,7 +134,7 @@ public class PODetailService {
 		}
 	}
 	
-	public String emailPurchaseORder(Long poId, String poNumber, MailBean mailBean) {
+	public String emailPurchaseOrder(Long poId, String poNumber, MailBean mailBean) {
 		PODetail poDetail = poDetailRepository.findByPoIdAndPoNumber(poId, poNumber);
 		return emailController.sendPurchaseOrderQuotation(poDetail, mailBean);
 	}

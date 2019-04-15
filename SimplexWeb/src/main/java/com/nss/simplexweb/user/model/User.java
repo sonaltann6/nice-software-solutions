@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.nss.simplexweb.company.model.Company;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -60,8 +62,10 @@ public class User implements Serializable{
 	@Column(name="secondary_contact_number", unique=true)
 	private String secondaryContactNumber;
 	
-	@Column(name="company_name")
-	private String companyName;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="company_id")
+	@JsonManagedReference
+	private Company company;
 	
 	@Column(name = "email", unique=true)
     @Email(message = "*Please provide a valid Email")

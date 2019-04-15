@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nss.simplexweb.enquiry.template.model.EnquiryTemplateBean;
 import com.nss.simplexweb.enquiry.template.service.EnquiryTemplateService;
@@ -46,6 +44,9 @@ import com.nss.simplexweb.po.model.POTrackingHistory;
 import com.nss.simplexweb.po.service.PODetailService;
 import com.nss.simplexweb.po.service.POStatusService;
 import com.nss.simplexweb.po.service.POTrackingHistoryService;
+import com.nss.simplexweb.push.notifications.model.PushNotification;
+import com.nss.simplexweb.push.notifications.repository.PushNotificationRepo;
+import com.nss.simplexweb.push.notifications.service.PushNotificationService;
 import com.nss.simplexweb.shipmenterm.service.ShipmentTermsService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.MainComapanyService;
@@ -91,6 +92,12 @@ public class PORestController {
 	@Autowired
 	private NotificationService notificationService;
 	
+	@Autowired
+	PushNotificationService pushNotificationService;
+	
+	@Autowired
+	PushNotificationRepo pushNotificationRepo;
+	
 	
 	@GetMapping(value = "/getMyPORequestsList")
 	public ArrayList<PODetail> getMyPORequestsList(@RequestParam ("userId") Long userId){
@@ -112,7 +119,7 @@ public class PORestController {
 		
 		map.put(COMPANY.COMPANY.name(), mainComapanyService.getMainComapnyInfo());
 		map.put(ENQUIRY.ENQUIRY_HISTORY_LIST, enquiryHistoryList);
-		map.put(PAYMENT_TERMS.PYAMENT_TERMS_LIST.name(), paymentTermsList);
+		map.put(PAYMENT_TERMS.PAYMENT_TERMS_LIST.name(), paymentTermsList);
 		map.put(SHIPMENT_TERMS.SHIPMENT_TERMS_LIST.name(), shipmentTermsService.getActiveShipmentTermsList());
 		map.put(PO.PO_DETAIL.name(), new PODetail());
 		return map;
@@ -171,6 +178,7 @@ public class PORestController {
 		ArrayList<POTrackingHistory> poTrackingHistoryList = poTrackingHistoryService.getPOTrackingHistoryListForPODesc(poDetail);
 		ArrayList<PODetail> inProgressPOListForProcessor = poDetailService.getInProgressPOListForProcessor(user);
 		
+		
 		map.put(PO.PO_DETAIL.name(), poDetail);
 		map.put(PO_TRACKING.PO_TRACKING_HISTORY.name(),  new POTrackingHistory());
 		map.put(PO.IN_PROGRESS_PO_LIST.name(), inProgressPOListForProcessor);
@@ -213,11 +221,13 @@ public class PORestController {
 	
 	@PostMapping(value = "/saveNewOrderWithOutFile")
 	@ResponseBody
-	public PODetail saveNewOrder(@RequestBody PODetail poDetail, HttpServletRequest request) {
-		@SuppressWarnings("unused")
+	public PODetail saveNewOrder(@RequestBody PODetail poDetail, HttpServletRequest request) throws IOException {
+		
 		User currentUser = userService.findUserByUserId(poDetail.getRequester().getUserId());
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		notificationService.saveNewPONotification(poDetail, 3);
+		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
+		pushNotificationService.sendPushNotification(pushNotification,3);
 		return poDetail;
 	}
 	
@@ -225,7 +235,7 @@ public class PORestController {
 	@ResponseBody
 	public PODetail saveNewOrder(@RequestParam(value = "ionicfile", required = false) MultipartFile file, 
 			HttpServletRequest request,
-			@RequestParam("poDetail") String base64Json) throws JsonParseException, JsonMappingException, IOException {
+			@RequestParam("poDetail") String base64Json) throws IOException {
 		
 		String json = new String(Base64.getDecoder().decode(base64Json));		
 		ObjectMapper mapper = new ObjectMapper();
@@ -236,6 +246,8 @@ public class PORestController {
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		poDetailService.savePODocument(file, poDetail, currentUser);
 		notificationService.saveNewPONotification(poDetail, 3);
+		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
+		pushNotificationService.sendPushNotification(pushNotification,3);
  		return new PODetail();
 	}
 	
@@ -258,7 +270,8 @@ public class PORestController {
 	@PostMapping(value = "/emailPurchaseOrder")
 	public Map<String, Object> emailPurchaseOrder(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber, @RequestBody MailBean mailBean){
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+		poDetailService.emailPurchaseOrder(poId, poNumber, mailBean);
+		map.put(PROJECT.SUCCESS_MSG.name(), poDetailService.getPODetailsByPoIdAndPoNumber(poId, poNumber));
 		return map;
 	}
 }

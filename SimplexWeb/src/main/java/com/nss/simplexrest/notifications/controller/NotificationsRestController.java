@@ -1,12 +1,12 @@
 package com.nss.simplexrest.notifications.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,44 +33,22 @@ public class NotificationsRestController {
 	UserService userService;
 	
 	@Autowired
-	static
 	NotificationService notificationService;
-
-	@GetMapping(value = "/getRegistrationNotification")
-	public Map<String, List<?>> getRegistrationNotifiaction(@RequestParam("userId") Long userId){
-		Map<String, List<?>> map = new HashMap<String, List<?>>();
-		
-		//find by userid 
-		List<NotificationsTbl> notificationList = notificationRepo.findByUserUserIdAndIsReadFalse(userId);
-		map.put(NOTIFICATION.REGISTRATION_NOTIFICATION.name(), notificationList);
-		System.out.println(map.toString());
+	
+	@GetMapping(value = "/getNotificationsByGroup")
+	@ResponseBody
+	public Map<String, List<?>> getNotificationsByGroupForUser(@RequestParam("userId") Long userId) throws JsonProcessingException{
+		//find by group
+		Map<String, List<?>> map = notificationService.getNotificationListByGroup(userId); 
 		return map;		
 	}
 	
-	@GetMapping(value = "/getNotificationsByGroup")
-	public @ResponseBody ArrayList<List<?>> getNotificationsByGroupForUser(@RequestParam("userId") Long userId){
-		//find by group
-		ArrayList<List<?>> list = new ArrayList<List<?>>();
-		try {
-			list = notificationService.getNotificationByGroup(userId);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return list;		
+	@PostMapping(value = "/getReadNotification")
+	@ResponseBody
+	public Map<String, Object> getReadNotification(@RequestParam("notificationId") Long notificationId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		NotificationsTbl notification = notificationService.readNotification(notificationId);
+		map.put(NOTIFICATION.NOTIFICATION_LIST.name(), notification);
+		return map;
 	}
-	
-	/*static ArrayList<List<?>> list = new ArrayList<List<?>>();
-	static {
-		try {
-			list = notificationService.getNotificationByGroup();
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@GetMapping(value = "/getStaticNotification")
-	public ArrayList<List<?>> getStaticNotification(){
-		return list;
-	}*/
 }

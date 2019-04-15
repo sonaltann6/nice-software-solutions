@@ -1556,7 +1556,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 	// calculate Steevdoor Strap
 	private double calculateSteevdoorStrap(Double surfaceLength, Double surfaceWidth, Double swl, int sfTypeValue) {
 		System.out.println("swl: "+swl);
-		double steevdooeStrap = 0, gramage = 0;
+		double steevdoorStrap = 0, gramage = 0;
 		if (sfTypeValue > 5) {
 			System.out.println("in cross loop gram");
 			gramage = setCrossLoopGramFromRange(swl);
@@ -1565,8 +1565,8 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 			gramage = setCrossLoopGramForSFFiveFromRange(swl);
 		}
 		System.out.println("gramage: "+gramage);
-		steevdooeStrap = (((surfaceLength + surfaceWidth + 25) * 2) / 100) * gramage;
-		return steevdooeStrap;
+		steevdoorStrap = (((surfaceLength + surfaceWidth + 25) * 2) / 100) * gramage;
+		return steevdoorStrap;
 	}
 
 	// calculate Loop Protector

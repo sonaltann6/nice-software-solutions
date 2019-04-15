@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nss.simplexweb.company.model.Company;
 import com.nss.simplexweb.enums.ROLE;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.repository.UserRepository;
@@ -36,6 +37,10 @@ public class DistributerService implements DistributerServiceInterface {
 	/** The email controller. */
 	@Autowired
 	private EmailController emailController;
+	
+	/** The user service. */
+	@Autowired
+	UserService userService;
 	
 	/** The uploaded folder path. */
 	@Value("${file.user.profile.image}")
@@ -84,6 +89,9 @@ public class DistributerService implements DistributerServiceInterface {
 		// TODO Auto-generated method stub
 		user.setIsActive(1);
 		user.setEmpId(null);
+		
+		Company company = userService.checkCompanyCode(user.getCompany().getCompanyUniqueCode());
+		user.setCompany(company);
 		
 		user.setRole(roleService.getRoleByRoleAbbr(ROLE.DIST.name()));
 		User clonedUser = (User) Utility.deepClone(user);
