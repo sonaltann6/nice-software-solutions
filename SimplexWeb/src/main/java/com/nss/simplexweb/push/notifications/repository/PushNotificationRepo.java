@@ -15,5 +15,7 @@ public interface PushNotificationRepo extends JpaRepository<PushNotification, Lo
 		
 	PushNotification findByDeviveTokenAndUserUserId(String deviceToken, Long userId);
 	
-	PushNotification findByUserUserId(Long userId);
+	ArrayList<PushNotification> findByUserUserId(Long userId);
+	
+	PushNotification findByDeviveToken(String deviceToken);
 }

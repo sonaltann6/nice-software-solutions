@@ -26,6 +26,7 @@ import com.nss.simplexweb.enums.USER;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.repository.CountryRepository;
 import com.nss.simplexweb.user.service.DistributerService;
+import com.nss.simplexweb.user.service.EmployeeService;
 import com.nss.simplexweb.user.service.UserService;
 
 /**
@@ -46,6 +47,9 @@ public class ProfileController {
 	
 	@Autowired
 	private DistributerService distributerService;
+	
+	@Autowired
+	private EmployeeService employeeService;
 	
 	@Autowired
 	private ResourceLoader resourceLoader;
@@ -77,6 +81,14 @@ public class ProfileController {
     	return mav;
     }
     
+    @RequestMapping(value={"/updateMyProfileEmployee"}, method = RequestMethod.POST)
+    public String updateProfileEmployee(User user, HttpServletRequest request) {
+    	user = userService.processUseNameBeforeSaving(user);
+    	user = employeeService.updateEmlpoyeeWithoutPassword(user);
+    	request.getSession(true).setAttribute(USER.USER.name(), user);
+    	return "redirect:/profile/viewMyProfile";
+    }
+    
     @RequestMapping(value={"/updateMyProfileDistributer"}, method = RequestMethod.POST)
     public String updateDistributerProfile(User user, HttpServletRequest request) {
     	user = userService.processUseNameBeforeSaving(user);
@@ -94,7 +106,11 @@ public class ProfileController {
              return "redirect:uploadStatus";
          }
     	 User currentUser = SessionUtility.getUserFromSession(request);
-    	 userService.uploadMyProfilePictureDistributer(file, currentUser);
+    	 if(currentUser.getRole().getRoleAbbr().equalsIgnoreCase(ROLE.DIST.name())) {
+    		 userService.uploadMyProfilePictureDistributer(file, currentUser);
+    	 }else {
+    		 userService.uploadMyProfilePictureEmployee(file, currentUser);
+    	 }
     	 
     	 return "redirect:/profile/viewMyProfile";
     }

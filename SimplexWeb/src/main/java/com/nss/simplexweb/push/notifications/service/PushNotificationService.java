@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.nss.simplexrest.push.notifications.apns.APNS;
 import com.nss.simplexrest.push.notifications.apns.ApnsService;
+import com.nss.simplexweb.enums.DEVICE;
 import com.nss.simplexweb.enums.NOTIFICATION;
 import com.nss.simplexweb.notifications.model.NotificationParentEntityTable;
 import com.nss.simplexweb.notifications.repository.NotificationParentEntityRepo;
@@ -47,7 +48,7 @@ public class PushNotificationService {
 	public Map<String, Object> sendPushNotification(PushNotification pushNotification, long notifcationType) throws IOException {
 		NotificationParentEntityTable entityTable = entityRepo.findByNotificationParentId(notifcationType);
 		Map<String, Object> map = new HashMap<String, Object>();
-		if (pushNotification.getDevicePlatform().equalsIgnoreCase("ios")) {
+		if (pushNotification.getDevicePlatform().equalsIgnoreCase(DEVICE.IOS.name())) {
 			System.out.println(CERTIFICATE_FOLDER_PATH);
 			System.out.println(CERTIFICATE_PWD);
 			InputStream stream = new FileInputStream(CERTIFICATE_FOLDER_PATH + File.separator + CERTIFICATE_NAME);
@@ -57,19 +58,19 @@ public class PushNotificationService {
 					.build();
 
 			String payload = APNS.newPayload()
-					.alertTitle(entityTable.getNotificationTitle())
-					.alertBody("TBD")
+					.alertTitle(entityTable.getNotificationParentTypeName())
+					.alertBody(entityTable.getNotificationTitle())
 					.sound("default")
 					.build();
 
 			service.push(pushNotification.getDeviveToken(), payload);
 			
-		}else if(pushNotification.getDevicePlatform().equalsIgnoreCase("andorid")) {
+		}else if(pushNotification.getDevicePlatform().equalsIgnoreCase(DEVICE.ANDROID.name())) {
 			System.out.println(SERVER_KEY);
 			String pushMessage = "{\"data\":{\"title\":\"" +
-					entityTable.getNotificationTitle()  +
+					entityTable.getNotificationParentTypeName()  +
 	                "\",\"message\":\"" +
-	                
+	                entityTable.getNotificationTitle() +
 	                "\"},\"to\":\"" +
 	                pushNotification.getDeviveToken() +
 	                "\"}";
@@ -92,5 +93,10 @@ public class PushNotificationService {
 		map.put(NOTIFICATION.NOTIFICATION_LIST.name(), entityTable);
 		map.put(NOTIFICATION.PUSH_NOTIFICATION.name(), pushNotification);
 		return map;
+	}
+	
+	public PushNotification doesDeviceTokenExist(String deviceToken) {
+		PushNotification pushNotification = pushNotificationRepo.findByDeviveToken(deviceToken);
+		return pushNotification;
 	}
 }

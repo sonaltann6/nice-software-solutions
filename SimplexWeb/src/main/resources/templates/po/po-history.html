@@ -105,6 +105,7 @@
 										</thead>
 										<tbody>
 											<tr th:each="poDetail, rowStat : ${PO_LIST}">
+												<th:block th:unless="${poDetail.paymentTerms == null}">
 												<td>
 													<div class="btn-group">
 							                            <button data-toggle="dropdown" class="btn btn-warning btn-sm dropdown-toggle btn-xs" aria-expanded="true"><i class="fa fa-file-text-o"> </i> <span th:text="${poDetail.poNumber}"></span> <span class="caret"></span></button>
@@ -113,13 +114,14 @@
 							                                <li><a th:href="@{/po/newPOController/getPODetails?} + 'poId=' + ${poDetail.poId} + '&poNumber=' + ${poDetail.poNumber}">View Details</a></li>
 							                                <li><a th:href="@{/po/newPOController/getPOHistoryForUser/trackPO?} + 'poId=' + ${poDetail.poId} + '&poNumber=' + ${poDetail.poNumber}">Track Order</a></li>
 							                                <li><a href="#">Contact <span th:text="${session.COMPANY.companyName}"></span></a></li>
+							                                <li><a th:href="@{/po/newPOController/rePlaceOrder?} + 'poId=' + ${poDetail.poId}">Re-Order</a></li> 
 							                            </ul>
 							                        </div>
 													<!-- <a class="btn btn-warning btn-xs" th:href="@{/po/newPOController/getPODetails?} + 'poId=' + ${poDetail.poId} + '&poNumber=' + ${poDetail.poNumber}">
 							                            <i class="fa fa-file-text-o"> </i> <span th:text="${poDetail.poNumber}"></span>
 							                        </a> -->
 							                        <br/>
-							                        <small class="m-r">Items : <span th:text="${#lists.size(poDetail.poItemsList)}" th:unless="${poDetail.poItemsList != null}"></span></small>
+							                        <small class="m-r">Items : <span th:text="${#lists.size(poDetail.poItemsList)}"></span></small>
 							                        <br/>
 						                            <div class="ibox">
 								                        <div class="ibox-tools" style="text-align: left;">
@@ -302,6 +304,24 @@
 														</div>
 													</form>
 												</td>
+												</th:block>
+												<th:block th:unless="${poDetail.paymentTerms != null}">
+													<td>
+														<div class="btn-group">
+								                            <button data-toggle="dropdown" class="btn btn-warning btn-sm dropdown-toggle btn-xs" aria-expanded="true"><i class="fa fa-file-text-o"> </i> <span th:text="${poDetail.poNumber}"></span> <span class="caret"></span></button>
+								                            <ul class="dropdown-menu">
+								                            	<li><a href="#" class="copy-text" th:attr="data-copy-text=${poDetail.poNumber}">Copy PO Number</a></li>
+								                                <li><a th:href="@{/po/newPOController/getPODetails?} + 'poId=' + ${poDetail.poId} + '&poNumber=' + ${poDetail.poNumber}">View Details</a></li>
+								                                <li><a th:href="@{/po/newPOController/getPOHistoryForUser/trackPO?} + 'poId=' + ${poDetail.poId} + '&poNumber=' + ${poDetail.poNumber}">Track Order</a></li>
+								                                <li><a href="#">Contact <span th:text="${session.COMPANY.companyName}"></span></a></li>
+								                                <li><a th:href="@{/po/newPOController/rePlaceOrder?} + 'poId=' + ${poDetail.poId}">Re-Order</a></li> 
+								                            </ul>
+								                        </div>
+							                        </td>
+							                        <td>Not Available</td>
+							                        <td colspan="2">Not Available</td>
+							                        <!-- <td>Not Available</td> -->
+												</th:block>
 											</tr>
 										</tbody>
 									</table>

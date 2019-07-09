@@ -71,6 +71,7 @@
          </div>
          <div class="ibox-content">
          	<div class="table-responsive">
+         	<form role="form" id="globalTemplateForm" method="post" th:action="@{/enquiry/globalTemplateController/reEnqGlobalTemplate}"  autocomplete="off" th:object="${ENQUIRY_HISTORY_LIST}" class="wizard-big form-horizontal">
                <table class="table table-striped table-bordered table-hover dataTables-example" >
                	<thead>
                		<tr>
@@ -95,10 +96,14 @@
                 		<button type="button" class="btn btn-warning btn-xs viewEnquiryBtn" data-th-attr="data-enquiryid=${enquiry.enquiryId}, data-enquirynumber=${enquiry.enquiryNumber}">
                        		<i class="fa fa-eye"></i> View
                        	</button>
+                       	<button type="button" class="btn btn-warning btn-xs reEnquiryBtn" data-th-attr="data-enquiryid=${enquiry.enquiryId}">
+                       		<i class="fa fa-question-circle"></i> Re-Enquire
+                       	</button>
                 	</td>
                 </tr>
                 </tbody>
                 </table>
+                </form>
      	 	</div>
        	 </div>
        	 </div>

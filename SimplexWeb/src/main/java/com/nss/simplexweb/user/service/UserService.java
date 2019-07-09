@@ -50,6 +50,9 @@ public class UserService implements UserServiceInterface {
 	@Autowired
 	CompanyService companyService;
 	
+	@Autowired
+	EmployeeService employeeService;
+	
 	@Value("${file.user.profile.image}")
 	private String PROFILE_PICTURE_UPLOADED_FOLDER_PATH;
 	
@@ -92,6 +95,23 @@ public class UserService implements UserServiceInterface {
 		//Save
 		Utility.singleFileUpload(file, PROFILE_PICTURE_UPLOADED_FOLDER_PATH, UPLOAD_FILE_NAME);
 		distributerService.updateMyProfilePictureDistributer(currentUser);
+	}
+	
+	public void uploadMyProfilePictureEmployee(MultipartFile file, User currentUser) {
+		//Set values to file attr
+		//String UPLOADED_FOLDER_PATH = currentUser.getProfilePicFolderpath();
+		String UPLOAD_FILE_NAME = currentUser.getFullName()
+									.replaceAll("\\s", "_").concat("_")
+									.concat(Utility.generateRandomPassword(10))
+									.concat('.' + FilenameUtils.getExtension(file.getOriginalFilename()));
+		
+		//Set value to user bean
+		currentUser.setProfilePicFolderpath(PROFILE_PICTURE_UPLOADED_FOLDER_PATH);
+		currentUser.setProfilePicFilename(UPLOAD_FILE_NAME);
+		
+		//Save
+		Utility.singleFileUpload(file, PROFILE_PICTURE_UPLOADED_FOLDER_PATH, UPLOAD_FILE_NAME);
+		employeeService.updateMyProfilePictureEmployee(currentUser);
 	}
 	
 	

@@ -8,4 +8,7 @@ import com.nss.simplexweb.enquiry.template.model.product.ProductUnitTypeLength;
 @Repository("productUnitTypeLengthRepository")
 public interface ProductUnitTypeLengthRepository extends JpaRepository<ProductUnitTypeLength, Long>{
 
+	
+	//find by product unit type length
+	ProductUnitTypeLength findByUnitTypeAbbr(String productUnitType);
 }

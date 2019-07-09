@@ -308,6 +308,10 @@ public class EnquiryTemplateService {
 		return enquiryTemplateRepository.findByEnquiryId(enquiryId);
 	}
 
+	public EnquiryTemplateBean getEnquiryDetailsByEnquiryNumber(String enquiryNumber) {
+		return enquiryTemplateRepository.findByEnquiryNumber(enquiryNumber);
+	}
+	
 	public EnquiryTemplateBean getEnquiryDetailsByEnquiryIdAndEnquiryNumber(Long enquiryId, String enquiryNumber) {
 		return enquiryTemplateRepository.findByEnquiryIdAndEnquiryNumber(enquiryId, enquiryNumber);
 	}

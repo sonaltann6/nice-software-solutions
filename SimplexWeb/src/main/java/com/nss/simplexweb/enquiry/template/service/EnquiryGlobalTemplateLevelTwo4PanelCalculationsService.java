@@ -830,7 +830,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 				}
 			}
 			if (result) {
-				double additionalValue = 150;
+				double additionalValue = 0;
 
 				totalCost = totalCost + bagDBRWCost;
 				System.out.println("bagRawMaterialCost : "+bagDBRWCost);
@@ -888,7 +888,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 				}
 
 				// checking fabric color count
-				if (fabricColorCount > 0) {
+				if (fabricColorCount > 1) {
 					totalCost = totalCost + colorFabricDBCost;
 					System.out.println("colorFabricDBCost : "+totalCost);
 				}
@@ -1154,18 +1154,28 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 				enquiryTemplateBean.getProductSFtype().getSfTypeValue());
 
 		if (enquiryTemplateBean.getLoopType().getLoopTypeAbr().equalsIgnoreCase(ENQUIRY.LOOP_TYPE_CORNER_LOOP)) {
-			Double loopGram = ((enquiryTemplateBean.getSwl() * enquiryTemplateBean.getProductSFtype().getSfTypeValue())
-					/ enquiryTemplateBean.getLoopNumber()) / 40;
+			/*Double loopGram = ((enquiryTemplateBean.getSwl() * enquiryTemplateBean.getProductSFtype().getSfTypeValue())
+					/ enquiryTemplateBean.getLoopNumber()) / 40;*/
+			Double loopGram = 0.0;
+			if(enquiryTemplateBean.getProductSFtype().getSfTypeValue() > 5) {
+				loopGram = setCornerLoopGramFromRange(enquiryTemplateBean.getSwl());
+			}else {
+				loopGram = setCornerLoopGramSFFiveFromRange(enquiryTemplateBean.getSwl());
+			}
 			Double cornerLoop = (4 * (loopGram * loopCutLength)) / 100;
+			System.out.println("corner loop " +cornerLoop);
 			return cornerLoop;
 		} else {
 			double crossLoopGram = 0;
 			if (enquiryTemplateBean.getProductSFtype().getSfTypeValue() > 5) {
 				crossLoopGram = setCrossLoopGramFromRange(enquiryTemplateBean.getSwl());
+				System.out.println("cross loop gram " +crossLoopGram);
 			} else {
 				crossLoopGram = setCrossLoopGramForSFFiveFromRange(enquiryTemplateBean.getSwl());
+				System.out.println("cross loop gram "+crossLoopGram);
 			}
 			Double crossCornerLoop = (Double) ((4 * (crossLoopGram * loopCutLength)) / 100);
+			//System.out.println("cross corner loop " +crossCornerLoop);
 			return crossCornerLoop;
 		}
 	}
@@ -1183,6 +1193,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 		// loopCutLength=(2 * loopFreeHeight) + setLoopShortLengthFromRange(bagSWL) +
 		// setLoopDoubleLengthFromRange(bagSWL, bagHeight);
 		loopCutLength = (2 * loopHeight) + loopShortLen + loopDoubleLen;
+		System.out.println("loop cut length "+loopCutLength);
 		return loopCutLength;
 	}
 
@@ -1325,6 +1336,69 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 			return 0.0;
 		}
 	}
+	
+	//2b
+	//2.b.1
+	private double setCornerLoopGramFromRange(double bagSWL) {
+		if (bagSWL <= 499) {
+         	return 25 ;
+         } else if (bagSWL >= 500 && bagSWL <= 749) {
+        	 return 25;
+         } else if (bagSWL >= 750 && bagSWL <= 850) {
+        	 return 32;
+         } else if (bagSWL >= 851 && bagSWL <= 1000) {
+        	 return 35;
+         } else if (bagSWL >= 1001 && bagSWL <= 1100) {
+        	 return 35;
+         } else if (bagSWL >= 1101 && bagSWL <= 1250) {
+        	 return 42;
+         }else if (bagSWL >= 1251 && bagSWL <= 1300) {
+        	 return  42;
+         }else if (bagSWL >= 1301 && bagSWL <= 1500) {
+        	 return  55;
+         }else if (bagSWL >= 1501 && bagSWL <= 1650) {
+        	 return  55;
+         }else if (bagSWL >= 1651 && bagSWL <= 1800) {
+        	 return  60;
+         }else if (bagSWL >= 1801 && bagSWL <= 2000) {
+        	 return  65;
+         }else if (bagSWL > 2000) {
+        	 return 65;
+         }else{
+        	 return 0;
+         }
+	}
+	
+	//2.b.2
+	private double setCornerLoopGramSFFiveFromRange(double bagSWL) {
+		if (bagSWL <= 499) {
+         	return 25 ;
+         } else if (bagSWL >= 500 && bagSWL <= 749) {
+        	 return 25;
+         } else if (bagSWL >= 750 && bagSWL <= 850) {
+        	 return 25;
+         } else if (bagSWL >= 851 && bagSWL <= 1000) {
+        	 return 32;
+         } else if (bagSWL >= 1001 && bagSWL <= 1100) {
+        	 return 35;
+         } else if (bagSWL >= 1101 && bagSWL <= 1250) {
+        	 return 35;
+         }else if (bagSWL >= 1251 && bagSWL <= 1300) {
+        	 return  35;
+         }else if (bagSWL >= 1301 && bagSWL <= 1500) {
+        	 return  42;
+         }else if (bagSWL >= 1501 && bagSWL <= 1650) {
+        	 return  42;
+         }else if (bagSWL >= 1651 && bagSWL <= 1800) {
+        	 return  55;
+         }else if (bagSWL >= 1801 && bagSWL <= 2000) {
+        	 return  60;
+         }else if (bagSWL > 2000) {
+        	 return 60;
+         }else{
+        	 return 0;
+         }
+	}
 
 	// 3. Calculate Attachment Inlet
 	// 3.a. Top Skirt
@@ -1332,6 +1406,8 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 			Double topSkirtGSM) {
 		Double topSkirtCutLength = calculateTopSkirtCutLength(surfaceLength, surfaceWidth);
 		Double topSkirt = ((topSkirtLength + 5) * topSkirtCutLength * topSkirtGSM) / 10000;
+		System.out.println("top skirt cut length "+topSkirtCutLength);
+		System.out.println("top skirt "+topSkirt);
 		return topSkirt;
 	}
 
@@ -1346,6 +1422,8 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 			Double topSpoutGSM, Double topSpoutDiameter) {
 		Double topSpoutCutLength = calculateTopSpoutCutLength(topSpoutDiameter);
 		Double topSpout = ((topSpoutLength + 5) * topSpoutCutLength * topSpoutGSM) / 10000;
+		System.out.println("top spout cut length "+topSpoutCutLength);
+		System.out.println("top spout "+topSpout);
 		return topSpout;
 	}
 
@@ -1358,12 +1436,14 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 	// 3.b.2
 	private Double calculateAttachmentTopFabric(Double surfaceLength, Double surfaceWidth, Double topSpoutGSM) {
 		Double topFabric = ((surfaceLength + 12) * (surfaceWidth + 12) * topSpoutGSM) / 10000;
+		System.out.println("top fabric" +topFabric);
 		return topFabric;
 	}
 
 	// 3.c Top Flap
 	private Double calculateAttachmentInletTopFlap(Double surfaceLength, Double surfaceWidth, Double topFlapGSM) {
 		Double topFlap = ((surfaceLength + 12) * (surfaceWidth + 12) * topFlapGSM) / 10000;
+		System.out.println("top flap "+topFlap);
 		return topFlap;
 	}
 
@@ -1371,12 +1451,14 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 	private Double calculateAttachmentInletConicalTop(Double surfaceLength, Double surfaceWidth) {
 		// ((BAG WIDTH +12)+10 + (Bag length +12)+10 )/10000
 		Double conicalTop = (((surfaceWidth + 12) + 10) + ((surfaceLength + 12) + 10)) / 10000;
+		System.out.println("conical top "+conicalTop);
 		return conicalTop;
 	}
 
 	// 3.e. Platted Top
 	private Double calculateAttachmentInletPlattedTop(Double surfaceLength, Double surfaceWidth) {
 		Double plattedTop = (((surfaceWidth + 12) + 18) + (surfaceLength + 12) + 18) / 10000;
+		System.out.println("platted top "+plattedTop);
 		return plattedTop;
 	}
 
@@ -1418,6 +1500,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 			bottomFabric = 2 * (surfaceLength + 12) * (surfaceWidth + 12) * bottomSpoutGSM;
 			bottomAttach = (bottomSkirtLength + bottomFabric) / 10000;
 		}
+		System.out.println("bottom attach "+bottomAttach);
 		return bottomAttach;
 	}
 
@@ -1443,11 +1526,14 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 				topCutLength = calculateTopSpoutCutLength(inletDiameter);
 			}
 			topThread = (inletLength + 5) + topCutLength;
+			System.out.println("top thread "+topThread);
 		}
 		if (bottomDischarge) {
 			bottomThread = (outletLength + 5) + calculateBottomSpoutCutLength(outletDiameter);
+			System.out.println("bottom thread "+bottomThread);
 		}
 		thread = (((surfaceLength * 4) + (surfaceWidth * 4) + (surfaceHeight * 4) + topThread + bottomThread) / 100) * 5;
+		System.out.println("thread "+thread);
 		return thread;
 	}
 
@@ -1461,6 +1547,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 		} else if (bagseamTypeAbbr.equalsIgnoreCase(ENQUIRY.BAG_SEAM_TYPE_TRIPLE_FILLER_CORD)) {
 			fillerCord = bagThread * 3;
 		}
+		System.out.println("filler cord "+fillerCord);
 		return fillerCord;
 	}
 
@@ -1468,12 +1555,14 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 	// 5.a
 	private int totalLabel(int numberofLabels) {
 		int label = numberofLabels * 5;
+		System.out.println("label "+label);
 		return label;
 	}
 
 	// 5.b
 	private int totalDocument(Double docPouchValue) {
 		int document = (int) (docPouchValue * 10);
+		System.out.println("doc "+document);
 		return document;
 	}
 
@@ -1500,9 +1589,11 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 				|| enquiryTemplateBean.getBottomDischargeType().getBottomDischargeTypeAbbr()
 						.equalsIgnoreCase(ENQUIRY.BOTTOM_TYPE_EMPTY_SPOUT_WITH_IRIS)) {
 			int tieForBottom = totalBottomTie * 20;
+			System.out.println("tie for bottom "+tieForBottom);
 			return tieForBottom;
 		} else {
 			int tieForBottom = totalBottomTie * 10;
+			System.out.println("tie for bottom "+tieForBottom);
 			return tieForBottom;
 		}
 	}
@@ -1525,6 +1616,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 				+ enquiryTemplateBean.getTopRopeTieNumber() + enquiryTemplateBean.getTopVelcroTieNumber()
 				+ enquiryTemplateBean.getTopBlockNumber());
 
+		System.out.println("tie for top "+totalTopTie);
 		return 10 * totalTopTie;
 	}
 
@@ -1543,6 +1635,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 			gramage = 15;
 		}
 		perimeterBand = (((surfaceWidth * 2) + (surfaceLength * 2) + 25) / 100) * gramage;
+		System.out.println("perimeter band "+perimeterBand);
 		return perimeterBand;
 	}
 
@@ -1550,6 +1643,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 	private double calculateBellyBand(Double surfaceLength, Double surfaceWidth) {
 		double bellyBand = 0;
 		bellyBand = (((surfaceWidth * 2) + (surfaceLength * 2) + 25) / 100) * 25;
+		System.out.println("belly band "+bellyBand);
 		return bellyBand;
 	}
 
@@ -1566,6 +1660,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 		}
 		System.out.println("gramage: "+gramage);
 		steevdoorStrap = (((surfaceLength + surfaceWidth + 25) * 2) / 100) * gramage;
+		System.out.println("steev door strap "+steevdoorStrap);
 		return steevdoorStrap;
 	}
 
@@ -1574,6 +1669,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 		double loopProtector = 0, protectorCutLength = 0;
 		protectorCutLength = loopHeight * 2 * loopNumber;
 		loopProtector = (17 * loopNumber) * protectorCutLength * loopProtectorValue / 10000;
+		System.out.println("loop protector "+loopProtector);
 		return loopProtector;
 	}
 
@@ -1582,6 +1678,7 @@ public class EnquiryGlobalTemplateLevelTwo4PanelCalculationsService {
 			Double baffleValue) {
 		double baffleWidth = ((((surfaceLength + surfaceWidth) / 2) / 3) * 1.41) + 7;
 		double baffleWeight = (4 * (baffleWidth * (surfaceHeight - 16) * baffleValue)) / 10000;
+		System.out.println("baffle weight "+baffleWeight);
 		return baffleWeight;
 	}
 }

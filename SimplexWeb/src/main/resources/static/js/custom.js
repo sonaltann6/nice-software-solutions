@@ -263,6 +263,9 @@ function buildViewForm($viewForm, DATA_MAP, $modalElement){
 				case 'text':
 					$el.val(DATA_MAP[key]);
 					break;
+				case 'email':
+					$el.val(DATA_MAP[key]);
+					break;
 				case 'hidden':
 					$el.val(DATA_MAP[key]);
 					break;

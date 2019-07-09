@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.nss.simplexweb.company.service.impl.CompanyService;
+import com.nss.simplexweb.enums.COMPANY;
 import com.nss.simplexweb.enums.COUNTRY;
 import com.nss.simplexweb.enums.DISTRIBUTER;
 import com.nss.simplexweb.enums.PROJECT;
@@ -37,14 +39,18 @@ public class DistributerMasterController {
 	@Autowired
 	private CountryService countryService;
 	
+	@Autowired
+	CompanyService companyService;
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAllDistributersList() {
 		ModelAndView mav = new ModelAndView();
-		System.out.println(distributerService.findAllActiveDistributersList());
+		//System.out.println(distributerService.findAllActiveDistributersList());
 		mav
 			.addObject(DISTRIBUTER.DISTRIBUTER_LIST.name(), distributerService.findAllActiveDistributersList())
 			.addObject(USER.USER.name(), new User())
 			.addObject(COUNTRY.COUNTRY_LIST.name(), countryService.getAllCountryList())
+			.addObject(COMPANY.COMPANY_LIST.name(), companyService.findAllActiveCompanyList())
 			.setViewName("master/distributer/distributerMaster");
 		return mav;
 	}
@@ -84,6 +90,7 @@ public class DistributerMasterController {
 	public @ResponseBody Map<String, Object> getDistributerDetailsById(@RequestParam("userid") Long userId) {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put(DISTRIBUTER.DISTRIBUTER.name(), userService.findUserByUserId(userId)); 
+		map.put(COMPANY.COMPANY_LIST.name(), companyService.findAllActiveCompanyList());
 		return map;
 	}
 	

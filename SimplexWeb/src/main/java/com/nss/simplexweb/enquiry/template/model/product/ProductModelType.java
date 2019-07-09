@@ -37,4 +37,9 @@ public class ProductModelType implements Serializable {
 	@Column(name="model_type_abbr", unique=true)
 	private String modelTypeAbbr;
 	
+	@Override
+	public String toString(){  
+		  return null;
+	} 
+	
 }

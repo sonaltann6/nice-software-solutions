@@ -75,7 +75,7 @@
 			                    </tr>
 		                    </thead>
 		                    <tbody>
-			                    <tr th:each="paymentTerms, rowStat : ${PYAMENT_TERMS_LIST}">
+			                    <tr th:each="paymentTerms, rowStat : ${PAYMENT_TERMS_LIST}">
 			                        <td th:text="${rowStat.index + 1}"></td>
 			                        <td th:text="${paymentTerms.paymentTermCode}"></td>
 			                        <td th:text="${paymentTerms.paymentTermDays}"></td>

@@ -15,4 +15,6 @@ public interface PoItemsRepository extends JpaRepository<POItems, Long> {
 	
 	//Read
 	ArrayList<POItems> findAll();
+	
+	ArrayList<POItems> findByPoDetailPoId(Long poId);
 }

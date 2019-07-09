@@ -47,7 +47,7 @@
 								<div class="ibox-tools">
 									<button type="button"
 										class="btn btn-warning btn-xs addNewCompanyBtn"
-										data-toggle="modal" data-target="#addCompanyModal">
+										data-toggle="modal" data-modal-type="NEW">
 										<i class="fa  fa-industry"></i> Add New
 									</button>
 								</div>
@@ -104,9 +104,9 @@
 	        	<div th:replace="/footer :: footer"> </div>
 	        </footer>
 			
-			<div th:replace="master/company/addCompanyModal :: addCompanyModal"> </div>
-			<div th:replace="master/company/viewCompanyModal :: viewCompanyModal"> </div>
-			<div th:replace="master/company/editCompanyModal :: editCompanyModal"> </div>
+			 <div th:replace="master/addCompanyModal :: addCompanyModal"> </div>
+			 <div th:replace="master/viewCompanyModal :: viewCompanyModal"> </div>
+			<div th:replace="master/editCompanyModal :: editCompanyModal"> </div>
 			<!-- <div th:replace="master/distributer/viewDistributerModal :: viewDistributerModal"> </div>
 			<div th:replace="master/distributer/editDistributerModal :: editDistributerModal"> </div> -->
         </div>
@@ -146,10 +146,7 @@
    
    	<script th:src="@{/js/custom.js}"></script>
    	
-   	<!-- Distributer Master JS -->
-   <script th:src="@{/js/master/company/company-master.js}"></script>
-   <script th:src="@{/js/master/company/add-new-company-modal.js}"></script>
-   <script th:src="@{/js/master/company/edit-company-modal.js}"></script>
-   <script th:src="@{/js/master/company/delete-company.js}"></script>
+   	<!-- Company Master JS -->
+   <script th:src="@{/js/master/company/company.js}"></script>
 </body>
 </html>

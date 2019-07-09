@@ -8,4 +8,6 @@ import com.nss.simplexweb.enquiry.template.model.product.ProductModelType;
 @Repository("productModelTypeRepository")
 public interface ProductModelTypeRepository extends JpaRepository<ProductModelType, Long>{
 
+	//find by product model type
+	ProductModelType findByModelTypeAbbr(String productModelType);
 }

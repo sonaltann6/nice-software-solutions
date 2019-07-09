@@ -23,7 +23,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<span>Welcome to <a href="localhost:8080/SimplexWeb/">Simplex Chemopack Portal.</a></span>
+			<span>Welcome to <a href="http://49.248.121.202:8083/SimplexWeb/">Simplex Chemopack Portal.</a></span>
 		</div>
 		<div class="col-md-12">
 			<span>Following are the credentials to your account.</span>
@@ -39,6 +39,13 @@
 		<div class="col-md-12">
 			<span>Passsword : </span>
 			<span th:text="${CONTEXT_.CONTEXT_USER.password}"></span>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<span>Company Code : </span>
+			<span th:text="${CONTEXT_.CONTEXT_USER.company.companyUniqueCode}"></span>
 		</div>
 	</div>
 </body>

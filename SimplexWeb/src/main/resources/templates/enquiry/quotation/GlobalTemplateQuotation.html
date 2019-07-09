@@ -86,7 +86,8 @@
 
                        <div class="col-sm-6 text-right">
                            <h4>Enquiry No.</h4>
-                           <h4 class="text-navy"><span th:text="${ENQUIRY.enquiryNumber}"></span></h4>
+                           <h4 class="text-navy"><span class="ENQUIRY_NUMBER" th:text="${ENQUIRY.enquiryNumber}"></span></h4>
+                           <div style="display:none;"><span class="ENQUIRY_ID" th:text="${ENQUIRY.enquiryId}"></span></div>
                            <span>To:</span>
                            <address>
                                <strong><span th:text="${session.COMPANY.companyFullName}" th:unless="${session == null}"></span></strong><br>
@@ -122,7 +123,7 @@
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Baffle (GSM) </strong></td>
-		                               <td> <span th:text="${ENQUIRY.baffle == 'true'}? ${ENQUIRY.baffle} : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.baffle == 'true'}? Yes : No"></span> </td> 
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Surface </strong></td>
@@ -132,10 +133,10 @@
 		                               <td><strong> Length - Width - Height (cm) </strong></td>
 		                               <td> <span th:text="${ENQUIRY.surfaceLength}"></span> - <span th:text="${ENQUIRY.surfaceWidth}"></span> - <span th:text="${ENQUIRY.surfaceHeight}"></span> </td>
 		                           </tr>
-		                           <tr>
+		                           <!-- <tr>
 		                               <td><strong> Grade Type </strong></td>
 		                               <td> No Grade </td>
-		                           </tr>
+		                           </tr> -->
 		                           <tr>
 		                               <td><strong> SWL (Kg) </strong></td>
 		                               <td> <span th:text="${ENQUIRY.swl}"></span> </td>
@@ -146,11 +147,13 @@
 		                           </tr>
 		                           <tr>
 		                               <td><strong> UN </strong></td>
-		                               <td> <span th:text="${ENQUIRY.un == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.un == true}? Yes : No"></span> </td>
+		                               <!-- <td> <span th:unless="${ENQUIRY.un != true}" th:text="${ENQUIRY.un}"></span> </td> -->
 		                           </tr>
 		                           <tr>
 		                               <td><strong> UV </strong></td>
-		                               <td> <span th:text="${ENQUIRY.uv == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.uv == true}? Yes : No"></span> </td>
+		                               <!-- <td> <span th:unless="${ENQUIRY.uv == 'true'}">Yes</span> </td> -->
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Remarks </strong></td>
@@ -177,7 +180,8 @@
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Reinforcement </strong></td>
-		                               <td> <span th:text="${ENQUIRY.reinforcement == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.reinforcement == true}? Yes : No"></span> </td> 
+		                              <!--  <td> <span th:unless="${ENQUIRY.reinforcement == 'true'}">Yes</span> </td> -->
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Fabric GSM </strong></td>
@@ -238,8 +242,34 @@
 	                           <tbody>
 		                           <tr>
 		                               <td><strong> Top Filling	 </strong></td>
-		                               <td> <span th:text="${ENQUIRY.topFilling == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.topFilling == true}? Yes : No"></span> </td>
 		                           </tr>
+		                           <th:block th:unless="${ENQUIRY.topFilling != true}">
+		                           <tr>
+		                           		<td><strong>Top Filling Type </strong></td>
+		                           		<td><span th:text="${ENQUIRY.topFillingType.topFillingTypeName}"></span></td>
+		                           </tr>
+		                          <tr>
+		                           		<td><strong>Top Type </strong></td>
+		                           		<td><span th:text="${ENQUIRY.topType.topTypeName}"></span></td>
+		                           </tr>
+		                           <tr>
+		                           		<td><strong>Standard Tie </strong></td>
+		                           		<td><span th:text="${ENQUIRY.topStandardTie == true}? ${ENQUIRY.topStandardTieNumber} : No"></span></td>
+		                           </tr>
+		                           <tr th:unless="${ENQUIRY.topRopeTie == 'true'}">
+		                           		<td><strong>Rope Tie </strong></td>
+		                           		<td><span th:text="${ENQUIRY.topStandardTie == true}? ${ENQUIRY.topRopeTieNumber} : No"></span></td>
+		                           </tr>
+		                           <tr th:unless="${ENQUIRY.topVelcroTie == 'true'}">
+		                           		<td><strong>Velcro Tie</strong></td>
+		                           		<td><span th:text="${ENQUIRY.topStandardTie == true}? ${ENQUIRY.topVelcroTieNumber} : No"></span></td>
+		                           </tr>
+		                            <tr th:unless="${ENQUIRY.topBlock == 'true'}">
+		                           		<td><strong>B-Lock </strong></td>
+		                           		<td><span th:text="${ENQUIRY.topStandardTie == true}? ${ENQUIRY.topBlockNumber} : No"></span></td>
+		                           </tr>
+		                           </th:block>
 	                           </tbody>
 	                       </table>
                    		</div>
@@ -253,8 +283,34 @@
 	                           <tbody>
 		                           <tr>
 		                               <td><strong> Bottom Discharge </strong></td>
-		                               <td> <span th:text="${ENQUIRY.bottomDischarge == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.bottomDischarge == true}? Yes : No"></span> </td>
 		                           </tr>
+		                           <th:block th:unless="${ENQUIRY.bottomDischarge != true}">
+		                           <tr>
+		                               <td><strong> Discharge Type  </strong></td>
+		                               <td> <span th:text="${ENQUIRY.bottomDischargeType.bottomDischargeTypeName}"></span> </td>
+		                           </tr>
+		                           <tr>
+		                               <td><strong> Bottom Type </strong></td>
+		                               <td> <span th:text="${ENQUIRY.bottomType.bottomTypeName}"></span> </td>
+		                           </tr>
+		                           <tr>
+		                           		<td><strong>Standard Tie </strong></td>
+		                           		<td><span th:text="${ENQUIRY.bottomStandardTie == true}? ${ENQUIRY.bottomStandardTieNumber} : No"></span></td>
+		                           </tr>
+		                           <tr>
+		                           		<td><strong>Rope Tie </strong></td>
+		                           		<td><span th:text="${ENQUIRY.bottomRopeTie == true}? ${ENQUIRY.bottomRopeTieNumber} : No"></span></td>
+		                           </tr>
+		                           <tr>
+		                           		<td><strong>Velcro Tie</strong></td>
+		                           		<td><span th:text="${ENQUIRY.bottomVelcroTie == true}? ${ENQUIRY.bottomVelcroTieNumber} : No"></span></td>
+		                           </tr>
+		                            <tr>
+		                           		<td><strong>B-Lock </strong></td>
+		                           		<td><span th:text="${ENQUIRY.bottomBlock == true}? ${ENQUIRY.bottomBlockNumber} : No"></span></td>
+		                           </tr>
+		                           </th:block>
 	                           </tbody>
 	                       </table>
                    		</div>
@@ -273,11 +329,11 @@
 	                           <tbody>
 		                           <tr>
 		                               <td><strong> Doc Pouch </strong></td>
-		                               <td> <span th:text="${ENQUIRY.docPouch == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.docPouch == true}? Yes : No"></span> </td>
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Printing </strong></td>
-		                               <td> <span th:text="${ENQUIRY.printing == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.printing == true}? Yes : No"></span> </td>
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Packaging Type </strong></td>
@@ -285,15 +341,15 @@
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Perimeter Band </strong></td>
-		                               <td> <span th:text="${ENQUIRY.perimeterBand == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.perimeterBand == true}? Yes : No"></span> </td>
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Steevdoor Strap </strong></td>
-		                               <td> <span th:text="${ENQUIRY.steevdoorStrap == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.steevdoorStrap == true}? Yes : No"></span> </td>
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Metal Detector </strong></td>
-		                               <td> <span th:text="${ENQUIRY.metalDetector == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.metalDetector == true}? Yes : No" ></span> </td>
 		                           </tr>
 	                           </tbody>
 	                       </table>
@@ -310,21 +366,21 @@
 		                               <td><strong> Safety Labels </strong></td>
 		                               <td> <span th:text="${ENQUIRY.otherLabelsValue}"></span> </td>
 		                           </tr>
-		                           <tr>
+		                           <tr th:unless="${ENQUIRY.liner == 'true'}">
 		                               <td><strong> Liner </strong></td>
-		                               <td> <span th:text="${ENQUIRY.liner == 'true'}? Yes : No"></span> </td>
+		                               <td> <span  th:text="Yes"></span> </td>
 		                           </tr>
-		                           <tr>
+		                           <!-- <tr>
 		                               <td><strong> Pieces Per Pallet </strong></td>
 		                               <td> **** I Don't Know *** </td>
-		                           </tr>
+		                           </tr> -->
 		                           <tr>
 		                               <td><strong> Belly Band </strong></td>
-		                               <td> <span th:text="${ENQUIRY.bellyBand == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.bellyBand == true}? Yes : No"></span> </td>
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Extra Cleaning </strong></td>
-		                               <td> <span th:text="${ENQUIRY.extraCleaning == 'true'}? Yes : No"></span> </td>
+		                               <td> <span th:text="${ENQUIRY.extraCleaning == true}? Yes : No"></span> </td>
 		                           </tr>
 		                           <tr>
 		                               <td><strong> Shipment </strong></td>

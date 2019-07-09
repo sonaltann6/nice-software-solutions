@@ -8,4 +8,7 @@ import com.nss.simplexweb.enquiry.template.model.loop.LoopMaterial;
 @Repository("loopMaterialRepository")
 public interface LoopMaterialRepository extends JpaRepository<LoopMaterial, Long> {
 
+	
+	//find by loop material
+	LoopMaterial findByLoopMaterialAbbr(String loopMaterial);
 }

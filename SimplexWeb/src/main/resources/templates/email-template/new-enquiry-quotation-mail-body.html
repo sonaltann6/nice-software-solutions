@@ -21,7 +21,8 @@
     </style>
 </head>
 <body>
-Hi,
+<span th:text="${CONTEXT_}"></span>
+<!-- Hi,
 <br>
 <br>
 Please find the attached Enquiry quotation document for enquiry reference number <h4 class="text-navy"><span th:text="${CONTEXT_.CONTEXT_ENQUIRY.enquiryNumber}"></span>.</h4>
@@ -39,6 +40,6 @@ Thanks and Regards,
 		th:text="${CONTEXT_.CONTEXT_COMPANY.companyAddressLineTwo + ' - ' + CONTEXT_.CONTEXT_COMPANY.companyAddressPIN}"></span><br></br>
 	<abbr title="Phone">Ph:</abbr> <span
 		th:text="${CONTEXT_.CONTEXT_COMPANY.companyPhonePrimary}"></span>
-</address>
+</address> -->
 </body>
 </html>

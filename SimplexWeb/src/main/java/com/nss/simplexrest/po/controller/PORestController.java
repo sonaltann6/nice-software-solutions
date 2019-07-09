@@ -226,8 +226,10 @@ public class PORestController {
 		User currentUser = userService.findUserByUserId(poDetail.getRequester().getUserId());
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		notificationService.saveNewPONotification(poDetail, 3);
-		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
-		pushNotificationService.sendPushNotification(pushNotification,3);
+		ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,3);
+		}
 		return poDetail;
 	}
 	
@@ -246,8 +248,10 @@ public class PORestController {
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		poDetailService.savePODocument(file, poDetail, currentUser);
 		notificationService.saveNewPONotification(poDetail, 3);
-		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
-		pushNotificationService.sendPushNotification(pushNotification,3);
+		ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,3);
+		}
  		return new PODetail();
 	}
 	

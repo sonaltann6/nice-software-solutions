@@ -27,6 +27,19 @@ function productElementsChangeEvents() {
 			}else{
 				$baffleRadio.filter('[value="false"]').iCheck('check');
 			}
+			
+			//2. Product model type and fabric type mapping
+			if(selectedModelValue == 1){
+				$fabricType.val(1);
+			}else if(selectedModelValue == 2){
+				$fabricType.val(1);
+			}else if(selectedModelValue == 3){
+				$fabricType.val(2);
+			}else if(selectedModelValue == 4){
+				$fabricType.val(2);
+			}else if(selectedModelValue == 5){
+				$fabricType.val(2);
+			}
 		});
 		
 	//2. If baffle radio is selected as Yes
@@ -52,14 +65,14 @@ function productElementsChangeEvents() {
 		
 	//4. If SF value is being changed, 
 		//If UN is selected as No and user is trying to set SF as 5:1, block him from doing so
-		$productSFtype.on('change', function(){
-			var productSfValue = parseInt($(this).val());
-			if(productSfValue == 2){	//6:1
-				if($unRadio.filter(":checked").val() == 'false'){
-					$productSFtype.val(1).change();
-				}
-			}
-		});
+//		$productSFtype.on('change', function(){
+//			var productSfValue = parseInt($(this).val());
+//			if(productSfValue == 2){	//6:1
+//				if($unRadio.filter(":checked").val() == 'false'){
+//					$productSFtype.val(1).change();
+//				}
+//			}
+//		});
 		
 		
 	//4. If UV radio is selected as Yes

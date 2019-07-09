@@ -8,4 +8,6 @@ import com.nss.simplexweb.enquiry.template.model.other.PackagingType;
 @Repository("packagingTypeRepository")
 public interface PackagingTypeRepository extends JpaRepository<PackagingType, Long> {
 
+	//find by packaging type
+	PackagingType findByPackagingTypeAbbr(String packagingType);
 }

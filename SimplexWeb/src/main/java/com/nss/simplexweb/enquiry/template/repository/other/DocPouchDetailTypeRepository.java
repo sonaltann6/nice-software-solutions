@@ -8,4 +8,6 @@ import com.nss.simplexweb.enquiry.template.model.other.DocPouchDetailType;
 @Repository("docPouchDetailTypeRepository")
 public interface DocPouchDetailTypeRepository extends JpaRepository<DocPouchDetailType, Long> {
 
+	//find by doc pouch detail
+	DocPouchDetailType findByDocPouchDetailTypeAbbr(String docPouchDetail);
 }

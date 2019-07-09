@@ -23,6 +23,7 @@ import com.nss.simplexweb.enquiry.template.service.product.ProductModelTypeServi
 import com.nss.simplexweb.enums.COMPANY;
 import com.nss.simplexweb.enums.DOCUMENT_PARENT_ENTITY_TYPE;
 import com.nss.simplexweb.enums.ENQUIRY;
+import com.nss.simplexweb.enums.MAIL;
 import com.nss.simplexweb.enums.PAYMENT_TERMS;
 import com.nss.simplexweb.enums.PO;
 import com.nss.simplexweb.enums.PO_TRACKING;
@@ -33,8 +34,10 @@ import com.nss.simplexweb.notifications.service.NotificationService;
 import com.nss.simplexweb.paymentterm.model.PaymentTerms;
 import com.nss.simplexweb.paymentterm.service.PaymentTermsService;
 import com.nss.simplexweb.po.model.PODetail;
+import com.nss.simplexweb.po.model.POItems;
 import com.nss.simplexweb.po.model.POStatus;
 import com.nss.simplexweb.po.model.POTrackingHistory;
+import com.nss.simplexweb.po.repository.PoItemsRepository;
 import com.nss.simplexweb.po.service.PODetailService;
 import com.nss.simplexweb.po.service.POStatusService;
 import com.nss.simplexweb.po.service.POTrackingHistoryService;
@@ -47,6 +50,7 @@ import com.nss.simplexweb.user.service.MainComapanyService;
 import com.nss.simplexweb.user.service.UserService;
 import com.nss.simplexweb.utility.document.model.Document;
 import com.nss.simplexweb.utility.document.service.DocumentService;
+import com.nss.simplexweb.utility.mail.MailBean;
 
 @Controller
 @RequestMapping("/po/newPOController")
@@ -90,6 +94,9 @@ public class NewPOController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	PoItemsRepository poItemsRepo;
 
 	@RequestMapping(value = "/placeOrder", method = RequestMethod.GET)
 	public ModelAndView placeNewOrder(HttpServletRequest request) {
@@ -115,15 +122,44 @@ public class NewPOController {
 		return mav;
 	}
 	
+	//re place order
+	@RequestMapping(value = "/rePlaceOrder", method = RequestMethod.GET)
+	public ModelAndView rePlaceOrder(@RequestParam ("poId") Long poId, HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		User user = SessionUtility.getUserFromSession(request);
+		ArrayList<EnquiryTemplateBean> enquiryHistoryList = enquiryTemplateService.getEnquiryHistoryForUser(user);
+		PODetail poDetail = poDetailService.getPODetailsByPoId(poId);
+		
+		ArrayList<PaymentTerms> paymentTermsList = null;
+		if(user.getRole().getRoleAbbr().equalsIgnoreCase(ROLE.DIST.name())) {
+			paymentTermsList = paymentTermsService.getPaymentTermsListByPartnerId(user.getUserId());
+		}else {
+			paymentTermsList = paymentTermsService.getActivePaymentTermsList();	//For employee
+		}
+		
+		mav
+			.addObject(COMPANY.COMPANY.name(), mainComapanyService.getMainComapnyInfo())
+			.addObject(ENQUIRY.ENQUIRY_HISTORY_LIST, enquiryHistoryList)
+			.addObject(PAYMENT_TERMS.PAYMENT_TERMS_LIST.name(), paymentTermsList)
+			.addObject(ENQUIRY.PRODUCT_MODEL_TYPE_LIST, productModelTypeService.getProductModelTypeList())
+			.addObject(SHIPMENT_TERMS.SHIPMENT_TERMS_LIST.name(), shipmentTermsService.getActiveShipmentTermsList())
+			.addObject(PO.PO_DETAIL.name(), poDetail)
+			.setViewName("po/place-order");
+		return mav;
+	}
+	
 	@RequestMapping(value = "/saveNewOrder", method = RequestMethod.POST)
 	public String saveNewOrder(PODetail poDetail, @RequestParam("poPDFFile") MultipartFile[] files, HttpServletRequest request) throws IOException {
 		User currentUser = SessionUtility.getUserFromSession(request);
 		poDetail.setRequester(currentUser);
+		
 		poDetail = poDetailService.saveNewPurchaseOrder(poDetail);
 		poDetailService.savePODocuments(files, poDetail, currentUser);
 		notificationService.saveNewPONotification(poDetail, 3);
-		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
-		pushNotificationService.sendPushNotification(pushNotification,3);
+		ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(currentUser.getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,3);
+		}	
 		return "redirect:/po/newPOController/getPODetails?poId="+poDetail.getPoId()+"&poNumber="+poDetail.getPoNumber();
 	}
 	
@@ -136,6 +172,7 @@ public class NewPOController {
 		mav
 			.addObject(COMPANY.COMPANY.name(), mainComapanyService.getMainComapnyInfo())
 			.addObject(PO.PO_DETAIL.name(), poDetail)
+			.addObject(MAIL.MAIL.name(), new MailBean())
 			.addObject(DOCUMENT_PARENT_ENTITY_TYPE.PO_DOCUMENT.name(), document)
 			.setViewName("po/po-details");
 		
@@ -153,9 +190,9 @@ public class NewPOController {
 	public ModelAndView getPOHistoryForUser(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		User currentUser = SessionUtility.getUserFromSession(request);
-		
+		 ArrayList<PODetail> poDetailList = poDetailService.getPOHistoryForUser(currentUser);
 		mav
-			.addObject(PO.PO_LIST.name(), poDetailService.getPOHistoryForUser(currentUser))
+			.addObject(PO.PO_LIST.name(), poDetailList)
 			.setViewName("po/po-history");
 		
 		return mav;
@@ -275,4 +312,15 @@ public class NewPOController {
 		return mav;
 	}
 	
+	@RequestMapping(value="/emailPurchaseOrder", method = RequestMethod.POST)
+	@ResponseBody
+	public String emailPurchaseOrder(@RequestParam("poId") Long poId, @RequestParam("poNumber") String poNumber, MailBean mailBean, HttpServletResponse response) {
+		return poDetailService.emailPurchaseOrder(poId, poNumber, mailBean);
+	}
+	
+	@RequestMapping(value="/getPoItemList", method = RequestMethod.GET)
+	@ResponseBody
+	public ArrayList<POItems> getPoItemList(@RequestParam("poId") Long poId){
+		return poItemsRepo.findByPoDetailPoId(poId);
+	}
 }

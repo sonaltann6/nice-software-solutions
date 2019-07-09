@@ -76,6 +76,11 @@
 .dataTables_wrapper {
 	padding-bottom: 0px;
 }
+th.dpass, td.dpass {
+    width: 1px !important;
+    font-size: 1px !important;
+    padding: 0px !important;
+}   
 </style>
 </head>
 <body id="body">
@@ -116,9 +121,10 @@
 													th:unless="${session == null}"></span>
 											</address>
 											<p>
+												<span class="po-id" th:text="${PO_DETAIL.poId}" style="display: none;"></span>
 												<span> <strong class="text-navy">P.O.
 														Number:</strong> <input type="text" title="Click to edit"
-													class="invisible-text-input-grey" th:field="*{poNumber}" required="">
+													class="invisible-text-input-grey po-number" th:field="*{poNumber}" required="">
 												</span> <br />
 											</p>
 										</div>
@@ -148,7 +154,7 @@
 													title="Click to edit" class="invisible-text-input-grey"
 													th:value="${session.USER.primaryContactNumber}"
 													th:unless="${session == null}"><br>
-											</address>
+											</address> 
 											<p>
 												<span><strong class="text-navy">P.O. Date:</strong> <span
 													th:text="${#dates.format(#dates.createNow(), 'MMM dd, yyyy')}"></span></span><br />
@@ -208,26 +214,29 @@
 															style="width: 100%"></td>
 														<td><select id="paymentTermsSelect"
 															th:field="*{paymentTerms}"
+															data-fill="paymentTerms.paymentTermCode"
 															data-placeholder="Choose a payment term..." tabindex="0"
-															required=""
+															required="required"
 															class="form-control invisible-text-input po-table-fields">
 																<option value="">Select</option>
 																<option th:each="paymentTerms : ${PAYMENT_TERMS_LIST}"
 																	th:value="${paymentTerms.paymentTermId}"
 																	th:text="${paymentTerms.paymentTermCode}"></option>
-														</select> <!-- <input type="text" th:field="*{paymentTerms}" class="form-control invisible-text-input po-table-fields" style="width:100%"> -->
-														</td>
+														</select> 
+														<!-- <input type="text" th:field="*{paymentTerms}" class="form-control invisible-text-input po-table-fields" style="width:100%"> -->
+														</td>  
 
 														<td>
 															<div class="date-group">
 																<div class="input-group date" style="width: 100%;">
 																	<span class="input-group-addon"
-																		style="padding: 0px; border: none;"> <!-- <i class="fa fa-calendar"></i> -->
+																		style="padding: 0px; border: none;"> <i class="fa fa-calendar"></i>
 																	</span> <input type="text" th:field="*{etd}"
 																		class="form-control invisible-text-input po-table-fields"
 																		placeholder="Expected Date" readonly="readonly">
 																</div>
-															</div> <!-- <input type="text" th:field="*{etd}" class="form-control invisible-text-input po-table-fields" style="width:100%"> -->
+															</div> 
+															<!-- <input type="text" th:field="*{etd}" class="form-control invisible-text-input po-table-fields" style="width:100%"> -->
 														</td>
 														<td><input type="text" th:field="*{deliveryMethod}"
 															class="form-control invisible-text-input po-table-fields"
@@ -237,31 +246,35 @@
 											</table>
 										</div>
 
-										<div class="table-responsive">
+										 <div class="table-responsive">
 											<table class="table table-bordered table-hover">
 												<thead>
 													<tr>
 														<th>Shipping Terms</th>
-														<th>SO #</th>
+														<!-- <th>SO #</th> -->
 														<th>Purchasing Contact</th>
 														<th>Warehouse Address</th>
 													</tr>
 												</thead>
 												<tbody>
 													<tr>
-														<td><select id="shippingTermsSelect"
+														 <td>
+														<select id="shippingTermsSelect"
 															th:field="*{shippingTerms}"
+															data-fill="shippingTerms.shipmentTermId"
 															data-placeholder="Choose a shipment term..." tabindex="0"
-															required=""
+															required="required"
 															class="form-control invisible-text-input po-table-fields">
 																<option value="">Select</option>
-																<option th:each="shipmentTerms : ${SHIPMENT_TERMS_LIST}"
-																	th:value="${shipmentTerms.shipmentTermId}"
-																	th:text="${shipmentTerms.shipmentTermName}"></option>
-														</select> <!-- <input type="text" th:field="*{shippingTerms}" class="form-control invisible-text-input po-table-fields" style="width:100%"></td> -->
-														<td><input type="text" th:field="*{soNumber}"
+																<option th:each="shippingTerms : ${SHIPMENT_TERMS_LIST}"
+																	th:value="${shippingTerms.shipmentTermId}"
+																	th:text="${shippingTerms.shipmentTermName}"></option>
+														</select>
+														</td>  
+														<!-- <input typ e="text" th:field="*{shippingTerms}" class="form-control invisible-text-input po-table-fields" style="width:100%"></td> -->
+														<!-- <td><input type="text" th:field="*{soNumber}"
 															class="form-control invisible-text-input po-table-fields"
-															style="width: 100%"></td>
+															style="width: 100%"></td> -->
 														<td><input type="text"
 															th:field="*{purchasingContact}"
 															class="form-control invisible-text-input po-table-fields"
@@ -302,7 +315,7 @@
 														<th>Enquiry No.</th>
 														<th>Item No.</th>
 														<th>Description</th>
-														<th>Model Id</th>
+														<th class="dpass">Model Id</th> 
 														<th>Model Type</th>
 														<th>Qty (Unit)</th>
 														<th>Rate ($)</th>
@@ -310,13 +323,11 @@
 														<th class="tbl-action-btn-td">Action</th>
 													</tr>
 												</thead>
-												<tbody>
-													<!-- <tr>
-				               			<td>
-				               				
-				               			</td>
-				           			</tr> -->
-												</tbody>
+												<!--  <tbody>
+													<tr>
+														<td></td>
+			                   						</tr>    
+												</tbody>  -->
 											</table>
 										</div>
 
@@ -362,7 +373,7 @@
 												</div>
 											</div>
 										</div>
-									</div>
+									</div> 
 
 								</div>
 							</form>

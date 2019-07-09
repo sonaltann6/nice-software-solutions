@@ -24,6 +24,10 @@ public class RoleService {
 		return roleRepository.findByRoleAbbr(roleAbbr);
 	}
 	
+	public Role getRolebyRoleId(Long roleId) {
+		return roleRepository.findByRoleId(roleId);
+	}
+	
 	//Parse All Level Hierarchy
 	public ArrayList<Role> getAllLevelChildRolesById(long roleId) {
 		ArrayList<Role> allLevelChildRolesList = null;

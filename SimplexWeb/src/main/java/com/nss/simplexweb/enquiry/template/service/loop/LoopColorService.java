@@ -1,5 +1,6 @@
 package com.nss.simplexweb.enquiry.template.service.loop;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,11 @@ public class LoopColorService {
 	public List<LoopColor> getLoopColorList() {
 		// TODO Auto-generated method stub
 		return loopColorRepository.findAll();
+	}
+	
+	public List<LoopColor> getABCLoopColorList() {
+		List<LoopColor> list = new ArrayList<>();
+		list.add(loopColorRepository.findByloopColorName("WHITE"));
+		return list;
 	}
 }

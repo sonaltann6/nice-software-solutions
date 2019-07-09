@@ -1,4 +1,5 @@
 var table;
+var removeFirstRowFlag=false;
 $(function(){
 	//Compulsory first line should be buildNavPath **
 	buildNavPath({'Home':'user/home', 'PO':'#', 'Place Order':'#'});
@@ -35,19 +36,19 @@ $(function(){
 			//debugger
 			newRowNumber = parseInt($.parseHTML(table.rows(table.rows().count() - 1).data()[0][1])[0].name.replace('poItemsList[', '').replace('].poItemNumber', '')) + 1; 
 		}
-		
 		var product_model_type_options = $('.PRODUCT_MODEL_TYPE_LIST_DUMMY_12345').html();
 		var enquiry_number_options = $('.ENQUIRY_NUMBER_LIST').html();
+		
+		
 		table.row.add([
-			/*'<span id="showIcon" class="field-tip form-control enquiry-details" style="display: none;"><i class="fa fa-eye"></i><span class="tip-content" id="enquiry_id"></span></span>',*/
 			'<div class="btn-group"><button data-toggle="dropdown" class="btn btn-warning btn-sm dropdown-toggle btn-xs" aria-expanded="true">Details<span class="caret"></span></button><ul class="dropdown-menu dropdown-menu-'+newRowNumber+'"></ul>',
-			'<select data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.enquiryNumber" name="poItemsList['+newRowNumber+'].enquiryNumber" class="form-control invisible-text-input poItemsList-enquiryNumber" style="width:100%" required="required" onChange="poItemsListEnquiryNumberChange(this)">'+ 
+			'<select data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.enquiryId" name="poItemsList['+newRowNumber+'].enquiryId" class="form-control invisible-text-input poItemsList-enquiryNumber" style="width:100%" required="required" onChange="poItemsListEnquiryNumberChange(this)">'+ 
 				enquiry_number_options +
 			'</select>',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemNumber" name="poItemsList['+newRowNumber+'].poItemNumber" class="form-control invisible-text-input" style="width:100%" required="required">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemDesc" name="poItemsList['+newRowNumber+'].poItemDesc" class="form-control invisible-text-input" style="width:100%">',
-            '<input type="" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.productModelTypeId" name="poItemsList['+newRowNumber+'].productModelType.modelTypeId" class="form-control invisible-text-input" style="width:100%;display:none;">',
-            '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.productModelType"  class="form-control invisible-text-input" style="width:100%" required="required">',
+            '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.productModelTypeId" name="poItemsList['+newRowNumber+'].productModelType.modelTypeId" class="form-control invisible-text-input dpass" style="display:none;">',
+            '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.productModelType" name=xyz class="form-control invisible-text-input" style="width:100%" required="required">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemQty" name="poItemsList['+newRowNumber+'].poItemQty" class="form-control invisible-text-input poItemQty" style="width:100%" required="required">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemRate" name="poItemsList['+newRowNumber+'].poItemRate" class="form-control invisible-text-input poItemRate" style="width:100%" required="required" onclick="" readonly="readonly">',
             '<input type="text" data-row-number="'+newRowNumber+'" id="poItemsList'+newRowNumber+'.poItemAmount" name="poItemsList['+newRowNumber+'].poItemAmount" class="form-control invisible-text-input" style="width:100%" readonly="readonly">',
@@ -57,11 +58,13 @@ $(function(){
         ]).draw( false );
 		rearrangeTableRowsIndexes();
 		$('.table-responsive').css('overflow','visible');
-	});
 		
+	});
+	
+	
 	//Remove PO row button
 	$('body').on('click', '.removePORowBtn', function() {
-		if(table.row($(this).closest('tr')).index() != 0){	//Not a first row
+		if(table.row($(this).closest('tr')).index() != 0 || removeFirstRowFlag){	//Not a first row
 			table.row($(this).closest('tr')).remove().draw( false );
 			rearrangeTableRowsIndexes();
         }else{
@@ -71,6 +74,8 @@ $(function(){
 	
 	//Generate first row on page load
 	$('.addPORowBtn').trigger('click');
+	
+	
 	
 	//Adjust text field width according typed text
 	/*$('.invisible-text-input').on('keypress', function() {
@@ -170,7 +175,7 @@ $(function(){
 		
 		for(var i=0; i<rowCount; i++){
 			var columnCount = table.rows(i).data()[0].length - 1;	//Total columns in current row
-			
+			//debugger
 			for(var j=1; j<columnCount; j++){
 				var oldName = $.parseHTML(table.rows(i).data()[0][j])[0].name;
 				var oldId = oldName.replace('[', '').replace(']', '');
@@ -185,7 +190,43 @@ $(function(){
 		}
 	}
 	
+	
+	getItemsListFromAjax();
+	
 });
+
+function getItemsListFromAjax(){
+	//to display poItemsList
+	var poId = $('.po-id').html();
+	var poNumber = $('.po-number').val();
+	removeFirstRowFlag=true;
+	
+	$.ajax({
+		url: contextRoot + 'po/newPOController/getPoItemList',
+		type: 'GET',
+		data: 'poId='+poId,
+		success : function(data){
+			$('.removePORowBtn').trigger('click');
+			removeFirstRowFlag=false;
+			poItemList = data;
+			console.log(poItemList)
+			var i = 0;
+			poItemList.forEach(function(poItem){
+				console.log(poItem);
+				$('.addPORowBtn').first().trigger('click');
+				$('select[name^="poItemsList['+i+'].enquiryId"]').val(poItem.enquiryId.enquiryId).trigger('change');
+				$("#poItemsList"+i+"\\.poItemNumber").val(poItem.poItemNumber);
+				i++;
+			});
+			
+			
+			/*1. For each loop
+			2. $('.addPORowBtn').trigger('click');
+			3. change enquiry dropdown value and trigger click*/
+			
+		}
+	});
+}
 
 function calculateAmount(rowNumber){
 	var qty = parseFloat($('#poItemsList'+rowNumber+'\\.poItemQty').val());
@@ -235,7 +276,7 @@ function poItemsListEnquiryNumberChange(obj){
 		type: 'GET',
 		data: 'enquiryId='+enquiryId,
 		success: function(data){
-			console.log(data);
+			//console.log(data);
 			if(data.ENQUIRY_HISTORY_LIST.topFilling == true){
 				var topFillingType = data.ENQUIRY_HISTORY_LIST.topFillingType.topFillingTypeName;
 				var topType = data.ENQUIRY_HISTORY_LIST.topType.topTypeName;
@@ -259,6 +300,7 @@ function poItemsListEnquiryNumberChange(obj){
 									   '<li><a href="#">Bottom Filling Type : ' +bottomDischargeType+ ',  Bottom Type : '+bottomType+ '</a></li>'
 									   
 			);
+			//$("#poItemsList"+rowNumber+"\\.enquiryNumber").val(data.ENQUIRY_HISTORY_LIST.enquiryNumber);
 			$("#poItemsList"+rowNumber+"\\.productModelTypeId").val(data.ENQUIRY_HISTORY_LIST.productModelType.modelTypeId);
 			$("#poItemsList"+rowNumber+"\\.productModelType").val(data.ENQUIRY_HISTORY_LIST.productModelType.modelTypeName);
 			$("#poItemsList"+rowNumber+"\\.poItemDesc").val("Product Type : " +data.ENQUIRY_HISTORY_LIST.productType.productTypeName +"Model Type : " +data.ENQUIRY_HISTORY_LIST.productModelType.modelTypeName +"Surface Type : " +data.ENQUIRY_HISTORY_LIST.productSurfaceType.surfaceTypeName 

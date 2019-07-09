@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+      
+<head>
+
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Simplex | Profile </title>
+
+	<link rel="shortcut icon" type="image/png" th:href="@{/favicon.ico}"/>
+	
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    
+    <link th:href="@{/font-awesome/css/font-awesome.css}" rel="stylesheet">
+
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    
+    <link th:href="@{/css/plugins/dataTables/datatables.min.css}" rel="stylesheet">
+    
+    <link th:href="@{/css/plugins/datapicker/datepicker3.css}" rel="stylesheet">
+    
+	<link th:href="@{/css/plugins/chosen/bootstrap-chosen.css}" rel="stylesheet">
+	
+	<!-- Toastr style -->
+    <link th:href="@{/css/plugins/toastr/toastr.min.css}" rel="stylesheet">
+    
+    <!-- Sweet Alert -->
+    <link th:href="@{/css/plugins/sweetalert/sweetalert.css}" rel="stylesheet">
+    
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="/contextPage :: contextPage"> </div>
+    <div id="wrapper">
+    	<div th:replace="/sidebar :: sidebar"> </div>
+        <div id="page-wrapper" class="gray-bg">
+        	<div th:replace="/topbar :: topbar"> </div>
+        <div class="wrapper wrapper-content">
+	            <div class="row animated fadeInRight">
+	                <div class="col-md-4">
+	                    <div class="ibox float-e-margins">
+	                        <div class="ibox-title">
+	                            <h5>Profile Picture</h5>
+	                            <div class="ibox-tools">
+	                            	<form id="submitNewProfilePicForm" method="POST" th:action="@{/profile/uploadMyProfilePicture}" enctype="multipart/form-data">
+		                            	<a>
+			                                <label title="Upload image file" for="inputImage" style="cursor: pointer;">
+			                                   <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+			                                   <i class="fa fa-pencil"></i>
+			                                </label>
+			                            </a>
+		                                <a title="Set As Profile Picture" class="set-as-profile-pic-check-btn" style="display: none;">
+		                                    <i class="fa fa-check  text-navy"></i>
+		                                </a>
+		                             </form>
+	                            </div>
+	                        </div>
+	                        <div>
+	                            <div class="ibox-content no-padding border-left-right">
+	                                <img alt="image" id="profileImage" class="img-responsive" th:src="@{'/profile/getMyProfilePictureByUserId?userId=' + ${session.USER.userId}}">
+	                                <div class="image-preview-mode-div hidden">
+	                                	<span class="preview-mode-label">
+	                            			Preview Mode
+	                            		</span>
+	                                	<img alt="image" id="previewProfileImage" class="img-responsive" th:src="@{/img/profile_big.jpg}">
+	                                </div>
+	                            </div>
+	                            <div class="ibox-content profile-content">
+	                                <h4><strong><span th:text="${session.USER.fullName}" th:unless="${session == null}"></span></strong></h4>
+	                                <p><i class="fa fa-map-marker"></i> <span th:text="${session.USER.country.countryName}" th:unless="${session == null}"></span></p>
+	                            </div>
+	                    	</div>
+	                	</div>
+	              </div>
+	                <div class="col-md-8">
+	                    <div class="ibox float-e-margins">
+	                        <div class="ibox-title">
+	                            <h5>Profile Details</h5>
+	                        </div>
+	                        <form id="personalInfoForm" role="form" autocomplete="off" th:object="${USER}" th:method="post" th:action="@{/profile/updateMyProfileEmployee}">
+	                        	<input type="hidden" data-fill="userId" th:field="*{userId}">
+	                        <div class="ibox-content">
+								<div class="tabs-container">
+			                        <ul class="nav nav-tabs">
+			                            <li class="active"><a data-toggle="tab" href="#empedit-tab-1"> Primary Info</a></li>
+			                            <li class=""><a data-toggle="tab" href="#empedit-tab-2">Additional Info</a></li>
+			                        </ul>
+			                        <div class="tab-content">
+			                            <div id="empedit-tab-1" class="tab-pane active">
+			                                <div class="panel-body">
+			                                    <div class="row">
+			                                    	<div class="col-sm-12">
+			                                    		<div class="row">
+			                                    			<div class="col-sm-12">
+			                                    				<div class="form-group">
+							                                    	<label>Full Name</label> 
+							                                    	<input type="text" th:field="*{fullName}" data-fill="fullName" placeholder="Full Name" class="form-control text-capitalize" readonly="readonly">
+							                                    </div>
+			                                    			</div>
+			                                    		</div>
+			                                    		<div class="row">
+			                                    			<div class="col-sm-6">
+				                                    			<div class="form-group">
+							                                    	<label class="required">First Name</label> 
+							                                    	<input type="text" th:field="*{firstName}" data-fill="firstName" placeholder="First Name" class="form-control text-capitalize text-no-space" required="required">
+							                                    </div>
+							                                 </div>
+							                                 <div class="col-sm-6">
+				                                    			<div class="form-group">
+							                                    	<label class="required">Last Name</label> 
+							                                    	<input type="text" th:field="*{lastName}" data-fill="lastName" placeholder="Last Name" class="form-control text-capitalize text-no-space" required="required">
+							                                    </div>
+							                                 </div>
+			                                    		</div>
+			                                    		<div class="row">
+			                                    			<div class="col-sm-6">
+				                                    			<div class="form-group">
+							                                    	<label class="required">Primary Contact</label> 
+							                                    	<input type="text" th:field="*{primaryContactNumber}" data-fill="primaryContactNumber" data-mask="(999) 999-9999" placeholder="Primary Contact" class="form-control" required="required" >
+							                                    </div>
+							                                 </div>
+							                                 <div class="col-sm-6">
+				                                    			<div class="form-group">
+							                                    	<label>Secondary Contact</label> 
+							                                    	<input type="text" th:field="*{secondaryContactNumber}" data-fill="secondaryContactNumber" data-mask="(999) 999-9999" placeholder="Secondary Contact" class="form-control" >
+							                                    </div>
+							                                 </div>
+			                                    		</div>
+			                                    		<div class="row">
+			                                    			<div class="col-sm-12">
+			                                    				<div class="form-group">
+							                                    	<label class="required">Email</label> 
+							                                    	<input type="text" th:field="*{email}"  data-fill="email" placeholder="Email ID" class="form-control" required="required" readonly="readonly">
+							                                    </div>
+			                                    			</div>
+			                                    		</div>
+			                                    		<div class="row">
+			                                    			<div class="col-sm-12">
+			                                    				<div class="form-group">
+							                                    	<label class="required">Company</label> 
+							                                    	<span th:text="${session.USER.company.companyName}" placeholder="Company Name" class="form-control" readonly="readonly" required="required"></span>
+							                                    </div>
+			                                    			</div>
+			                                    		</div>
+			                                    		<div class="row" style="display:none;">
+			                                    			<div class="col-sm-12">
+			                                    				<div class="form-group">
+							                                    	<label class="required">Company</label> 
+							                                    	<input type="text" th:field="*{company.companyId}"  data-fill="company.companyId" placeholder="Company Name" class="form-control" readonly="readonly" required="required">
+							                                    </div>
+			                                    			</div>
+			                                    		</div>
+			                                    		<div style="display:none;">
+			                                    			<input type="text" th:field="*{role.roleId}"  class="form-control" readonly="readonly">
+			                                    		</div>
+			                                    	</div>
+			                                    </div>
+			                                </div>
+			                            </div>
+			                            <div id="empedit-tab-2" class="tab-pane">
+			                                <div class="panel-body">
+			                                	<div class="row">
+			                                		<div class="col-sm-12">
+			                                			<div class="form-group">
+			                                				<label>Address</label>
+			                                				<textarea th:field="*{address}" data-fill="address" rows="2" cols="4" class="form-control text-capitalize"  placeholder="Address"></textarea>
+			                                			</div>
+			                                		</div>
+			                                	</div>
+			                                	<div class="row">
+			                                		<div class="col-sm-6">
+			                                			<div class="form-group date-group">
+							                                <label>Date of Birth</label>
+							                                <div class="input-group date">
+							                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							                                    <input type="text" th:field="*{dob}" data-fill="dob" class="form-control" placeholder="Date of Birth" readonly="readonly">
+							                                </div>
+			                                			</div>
+			                                		</div>
+			                                		<div class="col-sm-6">
+		                                				<div class="form-group">
+				                                			<label class="required">Country</label>
+											                <select id="countrySelectEdit" th:field="*{country}" data-placeholder="Choose a Country..." 
+											                data-fill="country.countryId" tabindex="1" required="" class="chosen-select form-control"  >
+												                <option value="">Select</option>
+												                <option th:each="country : ${COUNTRY_LIST}"
+												                		th:value="${country.countryId}"
+												                		th:text="${country.countryName}">
+												                </option>
+											                </select>
+											            </div>
+				                                	</div>
+				                                </div>
+				                            </div>
+				                        </div>
+				                    </div>
+				                    </div>
+				                    </div>
+				                    <div class="row" style="padding-top: 2%;">
+				                    	<div class="col-md-12">
+				                    		<button class="btn btn-sm btn-primary pull-right" type="submit"><strong>Update</strong></button>
+				                    	</div>
+			                    	</div>
+				                 </form>
+		                    </div>
+		                </div>
+		            </div>
+	        	</div>
+        <footer>
+        	<div th:replace="/footer :: footer"> </div>
+        </footer>
+        </div>
+        </div>
+
+        <!-- Mainly scripts -->
+    <script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+    <script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script th:src="@{/js/inspinia.js}"></script>
+    
+    <script th:src="@{/js/plugins/pace/pace.min.js}"></script>
+	
+	<!-- Data Table Plugin -->
+	<script th:src="@{/js/plugins/dataTables/datatables.min.js}"></script>
+	
+	<!-- Data picker -->
+   <script th:src="@{/js/plugins/datapicker/bootstrap-datepicker.js}"></script>
+   
+   <!-- Chosen -->
+   <script th:src="@{/js/plugins/chosen/chosen.jquery.js}"></script>
+   
+   <!-- Validate -->
+   <script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+   
+   <!-- Input Mask-->
+   <script th:src="@{/js/plugins/jasny/jasny-bootstrap.min.js}"></script>
+   
+   <!-- Toastr script -->
+   <script th:src="@{/js/plugins/toastr/toastr.min.js}"></script>
+   
+   <!-- Sweet alert -->
+    <script th:src="@{/js/plugins/sweetalert/sweetalert.min.js}"></script>
+   
+   	<script th:src="@{/js/custom.js}"></script>	
+   	
+   	<!-- distributer-profile.js -->
+   	<script th:src="@{/js/profile/distributer-profile.js}"></script>	
+</body>
+</html>

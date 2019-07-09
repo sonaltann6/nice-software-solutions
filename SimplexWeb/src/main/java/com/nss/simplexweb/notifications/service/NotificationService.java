@@ -51,6 +51,7 @@ public class NotificationService {
 		tbl.setEntityTable(entityRepo.findByNotificationParentId(id));
 		tbl.setNotificationParentEntityId(user.getUserId());
 		tbl.setUser(user);
+		tbl.setNotifTypeDetail(userService.findUserByUserId(user.getUserId()).getFullName());
 		notificationRepository.save(tbl);
 		return PROJECT.SUCCESS_MSG.name();
 	}
@@ -61,6 +62,7 @@ public class NotificationService {
 		tbl.setEntityTable(entityRepo.findByNotificationParentId(id));
 		tbl.setNotificationParentEntityId(enquiryTemplateBean.getEnquiryId());
 		tbl.setUser(enquiryTemplateBean.getRequester());
+		tbl.setNotifTypeDetail(enquiryTemplateService.getEnquiryDetailsByEnquiryId(enquiryTemplateBean.getEnquiryId()).getEnquiryNumber());
 		notificationRepository.save(tbl);
 		return PROJECT.SUCCESS_MSG.name();
 	}
@@ -71,6 +73,7 @@ public class NotificationService {
 		tbl.setEntityTable(entityRepo.findByNotificationParentId(id));
 		tbl.setNotificationParentEntityId(poDetail.getPoId());
 		tbl.setUser(poDetail.getRequester());
+		tbl.setNotifTypeDetail(detailRepo.findByPoId(poDetail.getPoId()).getPoNumber());
 		notificationRepository.save(tbl);
 		return PROJECT.SUCCESS_MSG.name();
 	}
@@ -81,6 +84,7 @@ public class NotificationService {
 		tbl.setEntityTable(entityRepo.findByNotificationParentId(id));
 		tbl.setNotificationParentEntityId(document.getDocumentDetailId());
 		tbl.setUser(document.getDocumentOwnerPartner());
+		tbl.setNotifTypeDetail(documentRepository.findBydocumentDetailId(document.getDocumentDetailId()).getDocumentStoreByName());
 		notificationRepository.save(tbl);
 		return PROJECT.SUCCESS_MSG.name();
 	}
@@ -102,27 +106,18 @@ public class NotificationService {
 						.equals(notifications.getEntityTable().getNotificationParentId())) {
 					if (notifications.getEntityTable().getNotificationParentTypeAbbr()
 							.equals(NOTIFICATION.REGISTRATION.name())) {
-						notifications.setNotifTypeDetail(userService
-								.findUserByUserId(notifications.getNotificationParentEntityId()).getFullName());
 						registrationNotificationList.add(notifications);
 					}
 					if (notifications.getEntityTable().getNotificationParentTypeAbbr()
 							.equals(NOTIFICATION.NEW_ENQUIRY.name())) {
-						notifications.setNotifTypeDetail(enquiryTemplateService
-								.getEnquiryDetailsByEnquiryId(notifications.getNotificationParentEntityId())
-								.getEnquiryNumber());
 						enquiryNotificationList.add(notifications);
 					}
-					if (notifications.getEntityTable().getNotificationParentTypeAbbr().equals(NOTIFICATION.PO.name())) {
-						notifications.setNotifTypeDetail(
-								detailRepo.findByPoId(notifications.getNotificationParentEntityId()).getPoNumber());
+					if (notifications.getEntityTable().getNotificationParentTypeAbbr()
+							.equals(NOTIFICATION.PO.name())) {
 						poNotificationList.add(notifications);
 					}
 					if (notifications.getEntityTable().getNotificationParentTypeAbbr()
 							.equals(NOTIFICATION.DOCUMENTS.name())) {
-						notifications.setNotifTypeDetail(
-								documentRepository.findBydocumentDetailId(notifications.getNotificationParentEntityId())
-										.getDocumentStoreByName());
 						documentNotificationList.add(notifications);
 					}
 				}
@@ -154,27 +149,17 @@ public class NotificationService {
 						.equals(notifications.getEntityTable().getNotificationParentId())) {
 					if (notifications.getEntityTable().getNotificationParentTypeAbbr()
 							.equals(NOTIFICATION.REGISTRATION.name())) {
-						notifications.setNotifTypeDetail(userService
-								.findUserByUserId(notifications.getNotificationParentEntityId()).getFullName());
 						registrationNotificationList.add(notifications);
 					}
 					if (notifications.getEntityTable().getNotificationParentTypeAbbr()
 							.equals(NOTIFICATION.NEW_ENQUIRY.name())) {
-						notifications.setNotifTypeDetail(enquiryTemplateService
-								.getEnquiryDetailsByEnquiryId(notifications.getNotificationParentEntityId())
-								.getEnquiryNumber());
 						enquiryNotificationList.add(notifications);
 					}
 					if (notifications.getEntityTable().getNotificationParentTypeAbbr().equals(NOTIFICATION.PO.name())) {
-						notifications.setNotifTypeDetail(
-								detailRepo.findByPoId(notifications.getNotificationParentEntityId()).getPoNumber());
 						poNotificationList.add(notifications);
 					}
 					if (notifications.getEntityTable().getNotificationParentTypeAbbr()
 							.equals(NOTIFICATION.DOCUMENTS.name())) {
-						notifications.setNotifTypeDetail(
-								documentRepository.findBydocumentDetailId(notifications.getNotificationParentEntityId())
-										.getDocumentStoreByName());
 						documentNotificationList.add(notifications);
 					}
 				}

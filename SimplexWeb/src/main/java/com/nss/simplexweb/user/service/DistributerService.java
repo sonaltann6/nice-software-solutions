@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nss.simplexweb.company.model.Company;
+import com.nss.simplexweb.company.service.impl.CompanyService;
 import com.nss.simplexweb.enums.ROLE;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.repository.UserRepository;
@@ -42,6 +43,9 @@ public class DistributerService implements DistributerServiceInterface {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	CompanyService companyService;
+	
 	/** The uploaded folder path. */
 	@Value("${file.user.profile.image}")
 	private String UPLOADED_FOLDER_PATH;
@@ -72,7 +76,7 @@ public class DistributerService implements DistributerServiceInterface {
 		user.setIsActive(1);
 		user.setEmpId(null);
 		user.setRole(roleService.getRoleByRoleAbbr(ROLE.DIST.name()));
-		
+		//user.setCompany(companyService.findActiveCompanyByCompanyId(user.getCompany().getCompanyId()));
 		User clonedUser = (User) Utility.deepClone(user);
 		clonedUser.setPassword(Utility.generateRandomPassword(8));
 		user.setPassword(bCryptPasswordEncoder.encode(clonedUser.getPassword()));
@@ -187,7 +191,9 @@ public class DistributerService implements DistributerServiceInterface {
 		user.setProfilePicFilename(oldUserData.getProfilePicFilename());
 		user.setProfilePicFolderpath(oldUserData.getProfilePicFolderpath());
 		user.setRole(roleService.getRoleByRoleAbbr(ROLE.DIST.name()));
+		//user.setCompany(companyService.findActiveCompanyByCompanyId(oldUserData.getCompany().getCompanyId()));
 		user.setPassword(oldUserData.getPassword());
+		
 		return userRepository.save(user);
 	}
 

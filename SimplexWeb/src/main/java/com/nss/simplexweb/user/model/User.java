@@ -3,7 +3,6 @@ package com.nss.simplexweb.user.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -62,7 +61,8 @@ public class User implements Serializable{
 	@Column(name="secondary_contact_number", unique=true)
 	private String secondaryContactNumber;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
+	//(cascade = CascadeType.ALL)
 	@JoinColumn(name="company_id")
 	@JsonManagedReference
 	private Company company;
@@ -118,4 +118,10 @@ public class User implements Serializable{
 	
 	@Column(name="profile_pic_filename", unique=true)
 	private String profilePicFilename;
+	
+	@Override
+	public String toString(){  
+		  return null;
+	} 
+	
 }

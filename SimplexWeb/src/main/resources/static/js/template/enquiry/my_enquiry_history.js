@@ -61,4 +61,31 @@ $(function(){
 		    alert('Please allow popups for this website');
 		}
 	})
+	
+	$('.reEnquiryBtn').on('click', function(){
+		var enquiryId = $(this).data('enquiryid');
+		
+		$.ajax({
+			url : contextRoot + 'enquiry/globalTemplateController/getEnquiryBean',
+			type: 'GET',
+			data: 'enquiryId='+enquiryId,
+			success:  function(data){
+				var ENQUIRY = data;
+				//console.log(ENQUIRY);
+				
+				$.ajax({
+					url : contextRoot + 'enquiry/globalTemplateController/reEnqGlobalTemplate',
+					type: 'POST',
+					data: JSON.stringify(ENQUIRY.ENQUIRY_HISTORY_LIST),
+					contentType: "application/json",
+					success: function(data){
+						//console.log(data);
+						//console.log(data.enquiryId);
+						window.location.href = contextRoot + 'enquiry/globalTemplateController/getGlobalTemplateQuotation?enquiryId='+data.enquiryId+'&enquiryNumber='+data.enquiryNumber;
+					}
+				});
+			}
+		});
+	})
+	
 });

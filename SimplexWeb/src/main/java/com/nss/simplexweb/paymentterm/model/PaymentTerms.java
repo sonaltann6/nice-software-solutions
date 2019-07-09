@@ -1,6 +1,7 @@
 package com.nss.simplexweb.paymentterm.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nss.simplexweb.user.model.User;
 
 import lombok.AllArgsConstructor;
@@ -45,7 +47,9 @@ public class PaymentTerms implements Serializable {
 	private String paymentTermDesc;
 	
 	@ManyToOne
+	//(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinColumn(name="created_by")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private User createdBy;
 	
 	/*@OneToMany(mappedBy = "paymentTerms")
@@ -53,4 +57,9 @@ public class PaymentTerms implements Serializable {
 	
 	@Column(name="is_active", nullable = false, columnDefinition = "int default 1")
 	private int isActive;
+	
+	@Override
+	public String toString(){  
+		  return null;
+	} 
 }

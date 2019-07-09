@@ -32,9 +32,6 @@ public class PaymentTermsMaster {
 	@Autowired
 	private DistributerService distributerService;
 	
-	@Autowired
-	private UserService userService;
-
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getPaymentTermsList(@SessionAttribute("USER") User user) {
 		ModelAndView mav = new ModelAndView();

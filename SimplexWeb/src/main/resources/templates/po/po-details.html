@@ -66,6 +66,19 @@
 		.dataTables_wrapper{
 			padding-bottom: 0px;
 		}
+		.loader {
+  			border: 16px solid #f3f3f3; /* Light grey */
+  			border-top: 16px solid #3498db; /* Blue */
+ 			border-radius: 50%;
+  			width: 12px;
+  			height: 12px;
+  			animation: spin 2s linear infinite;
+		}
+
+		@keyframes spin {
+  			0% { transform: rotate(0deg); }
+  			100% { transform: rotate(360deg); }
+		}
     </style>
 </head>
 <body id="body">
@@ -150,9 +163,9 @@
 								</p>
 							</div>
 						</div>
-	
+						
 						<hr class="hr">
-	
+						<th:block th:unless="${PO_DETAIL.shippingTerms == null}">
 						<div class="m-t">
 							<div class="row">
 		                   		<div class="col-md-12 table-responsive">
@@ -174,19 +187,19 @@
 				                               <td><strong> Account # </strong></td>
 				                               <td> <span th:text="${PO_DETAIL.vendorAccountNumber}"></span> </td>
 				                               
-				                               <td><strong> SO # </strong></td>
-				                               <td> <span th:text="${PO_DETAIL.soNumber}"></span> </td>
+				                               <!-- <td><strong> SO # </strong></td>
+				                               <td> <span th:text="${PO_DETAIL.soNumber}"></span> </td> -->
 				                           </tr>
 				                           <tr>
 				                               <td><strong> Payment Terms </strong></td>
-				                               <td> <span th:text="${PO_DETAIL.vendorNumber}"></span> </td>
+				                               <td> <span th:text="${PO_DETAIL.paymentTerms.paymentTermCode}"></span> </td>
 				                               
 				                               <td><strong> Purchasing Contact </strong></td>
 				                               <td> <span th:text="${PO_DETAIL.purchasingContact}"></span> </td>
 				                           </tr>
 				                           <tr>
 				                               <td><strong> Expected Date </strong></td>
-				                               <td> <span th:text="${PO_DETAIL.vendorNumber}"></span> </td>
+				                               <td> <span th:text="${PO_DETAIL.etd}"></span> </td>
 
 				                               <td><strong> Warehouse Address </strong></td>
 				                               <td> <span th:text="${PO_DETAIL.warehouse}"></span> </td>
@@ -196,9 +209,9 @@
 		                   		</div>
 		                   	</div>
 						</div>	
-						
 						<hr class="hr">
-						
+						<!-- </th:block>
+						<th:block th:unless="${PO_DETAIL.poItemsList != null}"> -->
 						<div class="table-responsive">
 						   <h4 class="text-navy">PO Items</h4>
 			               <table class="table table-striped  table-hover" style="padding-bottom: 0px">
@@ -243,6 +256,7 @@
     	 						</div>
 			               </div>
 			     	 	</div>
+			     	 	</th:block>
 					</div>
 			  </div>
 		   </div>
@@ -251,6 +265,9 @@
         <footer>
        		<div th:replace="/footer :: footer"> </div>
        </footer>	
+       
+      	  <div th:replace="po/sendPoEmailModal :: sendPOEmailModal"> </div> 
+       
      </div>
 	</div>
     <!-- Mainly scripts -->

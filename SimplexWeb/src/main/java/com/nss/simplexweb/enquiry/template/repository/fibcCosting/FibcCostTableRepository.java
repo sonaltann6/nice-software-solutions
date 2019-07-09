@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import com.nss.simplexweb.enquiry.template.model.fibcCosting.FibcCostTable;
 
 @Repository("fibcCostTableRepository")
-public interface FibcCostTableRepository extends JpaRepository<FibcCostTable, Long>{
-
-	FibcCostTable findByUserId(Long userId);
+public interface FibcCostTableRepository extends JpaRepository<FibcCostTable, Integer>{
 	
-	List<FibcCostTable> findAllByUserId(Long userId);
+	List<FibcCostTable> findByUserIdUserId(Long userId);
+	
+	Long removeByUserIdUserId(Long userId);
 }

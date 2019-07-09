@@ -9,4 +9,6 @@ import com.nss.simplexweb.enquiry.template.model.other.LinerType;
 @Repository("linerTypeRepository")
 public interface LinerTypeRepository extends JpaRepository<LinerType, Long> {
 
+	//find by liner type
+	LinerType findByLinerTypeAbbr(String linerType);
 }

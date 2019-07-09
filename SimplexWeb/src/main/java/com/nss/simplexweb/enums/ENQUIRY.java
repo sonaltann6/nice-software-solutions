@@ -36,6 +36,7 @@ public final class ENQUIRY {
 		
 	//Loop
 		public static final String LOOP_TYPE_LIST = "LOOP_TYPE_LIST";
+		public static final String LOOP_TYPE = "LOOP_TYPE";
 		public static final String LOOP_MATERIAL_LIST = "LOOP_MATERIAL_LIST";
 		public static final String LOOP_COLOR_LIST = "LOOP_COLOR_LIST";
 		public static final String LOOP_SEWING_TYPE_LIST = "LOOP_SEWING_TYPE_LIST";
@@ -151,6 +152,11 @@ public final class ENQUIRY {
 		public static final String DOC_POUCH_TYPE_A7_PORTRAIT = "A7_PORTRAIT";
 		public static final String DOC_POUCH_TYPE_A8_PORTRAIT = "A8_PORTRAIT";
 		public static final String DOC_POUCH_TYPE_A10_PORTRAIT = "A10_PORTRAIT";
+		
+		//doc pouch detail
+		public static final String DOC_POUCH_DETAIL_TOP_SEAM = "TOP_SEAM";
+		public static final String DOC_POUCH_DETAIL_BOTTOM_SEAM = "BOTTOM_SEAM";
+		public static final String DOC_POUCH_DETAIL_CENTER_SEAM = "CENTER_SEAM";
 		
 	//Shipment type
 		public static final String SHIPMENT_TYPE = "FOB";

@@ -8,4 +8,6 @@ import com.nss.simplexweb.enquiry.template.model.loop.LoopColor;
 @Repository("loopColorRepository")
 public interface LoopColorRepository extends JpaRepository<LoopColor, Long> {
 
+	//find by loop color
+	LoopColor findByloopColorName(String loopColor);
 }

@@ -183,6 +183,8 @@ public class TemplatePresetsService {
 			this.shipmentTypeService = shipmentTypeService;
 	}
 
+	
+	//global template presets
 	public Map<String, List<?>> getAllPresets() {
 		Map<String, List<?>> presetMap = new HashMap<>();
 		//Product
@@ -201,11 +203,14 @@ public class TemplatePresetsService {
 		//Top Filling
 			presetMap.put(ENQUIRY.TOP_FILLING_TYPE_LIST, topFillingTypeService.getTopFillingTypeList());
 			presetMap.put(ENQUIRY.TOP_TYPE_LIST, topTypeService.getTopTypeList());
+			presetMap.put("PLATEN_BAG_TOP_DETAILS", topTypeService.getTopType());
+			
 		//Bottom
 			presetMap.put(ENQUIRY.BOTTOM_DISCHARGE_TYPE_LIST, bottomDischargeTypeService.getBottomDischargeTypeList());
 			presetMap.put(ENQUIRY.BOTTOM_TYPE_LIST, bottomTypeService.getBottomTypeList());
         //Loop
 			presetMap.put(ENQUIRY.LOOP_TYPE_LIST, loopTypeService.getLoopTypeList());
+			presetMap.put(ENQUIRY.LOOP_TYPE, loopTypeService.getLoopType());
 			presetMap.put(ENQUIRY.LOOP_MATERIAL_LIST, loopMaterialService.getLoopMaterialList());
 			presetMap.put(ENQUIRY.LOOP_COLOR_LIST, loopColorService.getLoopColorList());
 			presetMap.put(ENQUIRY.LOOP_SEWING_TYPE_LIST, loopSewingTypeService.getLoopSewingTypeList());
@@ -221,7 +226,60 @@ public class TemplatePresetsService {
                                      
        //Shipment                               
 			presetMap.put(ENQUIRY.SHIPMENT_TYPE_LIST, shipmentTypeService.getShipmentTypeList());
+			
 
+		return presetMap;
+	}
+	
+	
+	//abc template preset
+	public Map<String, List<?>> getAllABCPresets() {
+		Map<String, List<?>> presetMap = new HashMap<>();
+		
+		//Product
+		presetMap.put(ENQUIRY.PRODUCT_TYPE_LIST, productTypeService.getProductTypeList());
+		presetMap.put(ENQUIRY.PRODUCT_MODEL_TYPE_LIST, productModelTypeService.getABCProductModelTypeList());
+		presetMap.put(ENQUIRY.PRODUCT_UNIT_TYPE_LENGTH_LIST, productUnitTypeLengthService.getABCProductUnitTypeLengthList());
+		presetMap.put(ENQUIRY.PRODUCT_UNIT_TYPE_WEIGHT_LIST, productUnitTypeWeightService.getABCProductUnitTypeWeightList());
+		presetMap.put(ENQUIRY.PRODUCT_SF_TYPE_LIST, ProductSFtypeService.getProductSFTypeList());
+		presetMap.put(ENQUIRY.PRODUCT_SURFACE_TYPE_LIST, productSurfaceTypeService.getProductSurfaceTypeList());
+		
+		//Fabric
+		presetMap.put(ENQUIRY.FABRIC_TYPE_LIST, fabricTypeService.getABCFabricTypeList());
+		presetMap.put(ENQUIRY.FABRIC_COLOR_LIST, fabricColorService.getFabricColorList());
+		presetMap.put(ENQUIRY.FABRIC_GSM_TYPE_LIST, fabricGSMTypeService.getFabricGSMTypeList());
+		presetMap.put(ENQUIRY.FABRIC_BAG_SEAM_TYPE_LIST, fabricBagSeamTypeService.getFabricBagSeamTypeList());
+		presetMap.put(ENQUIRY.FABRIC_BAG_SEAM_COLOR_LIST, fabricBagSeamColorService.getFabricBagSeamColorList());
+		
+		//top
+		presetMap.put(ENQUIRY.TOP_TYPE_LIST, topTypeService.getTopTypeList());
+		presetMap.put(ENQUIRY.TOP_FILLING_TYPE_LIST, topFillingTypeService.getTopFillingTypeList());
+		
+		//bottom
+		presetMap.put(ENQUIRY.BOTTOM_TYPE_LIST, bottomTypeService.getBottomTypeList());
+		presetMap.put(ENQUIRY.BOTTOM_DISCHARGE_TYPE_LIST, bottomDischargeTypeService.getBottomDischargeTypeList());
+		
+		//loop
+		presetMap.put(ENQUIRY.LOOP_TYPE_LIST, loopTypeService.getLoopTypeList());
+		presetMap.put(ENQUIRY.LOOP_MATERIAL_LIST, loopMaterialService.getABCLoopMaterialList());
+		presetMap.put(ENQUIRY.LOOP_COLOR_LIST, loopColorService.getABCLoopColorList());
+		presetMap.put(ENQUIRY.LOOP_SEWING_TYPE_LIST, loopSewingTypeService.getLoopSewingTypeList());
+		
+		//other
+		//A
+		presetMap.put(ENQUIRY.DOC_POUCH_TYPE_LIST, docPouchTypeService.getABCDcoPouchTypeList());
+		presetMap.put(ENQUIRY.DOC_POUCH_DETAIL_TYPE_LIST, docPouchDetailTypeService.getABCDocPouchDetailTypeList());
+		
+		//B
+		presetMap.put(ENQUIRY.PACKAGING_TYPE_LIST, packagingTypeService.getABCPackagingTypeList());
+		presetMap.put(ENQUIRY.SIDES_LIST, sidesService.getSidesList());
+		presetMap.put(ENQUIRY.PRINTING_COLOR_LIST, printingColorService.getPrintingColorList());
+		
+		//Liner
+		presetMap.put(ENQUIRY.LINER_TYPE_LIST, linerTypeService.getABCLinerTypeList());
+		
+		//Shipment                               
+		presetMap.put(ENQUIRY.SHIPMENT_TYPE_LIST, shipmentTypeService.getShipmentTypeList());
 		return presetMap;
 	}
 }

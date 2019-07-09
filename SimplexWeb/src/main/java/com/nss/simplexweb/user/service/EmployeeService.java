@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nss.simplexweb.company.service.impl.CompanyService;
 import com.nss.simplexweb.user.model.Department;
 import com.nss.simplexweb.user.model.Role;
 import com.nss.simplexweb.user.model.User;
@@ -29,6 +30,13 @@ public class EmployeeService implements EmployeeServiceInterface {
 	/** The role service. */
 	@Autowired
 	private RoleService roleService;
+	
+	/** The user service. */
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	CompanyService companyService;
 
 	/** The b crypt password encoder. */
 	@Autowired
@@ -269,7 +277,13 @@ public class EmployeeService implements EmployeeServiceInterface {
 		user.setIsActive(1);
 		user.setProfilePicFilename(oldUserData.getProfilePicFilename());
 		user.setProfilePicFolderpath(oldUserData.getProfilePicFolderpath());
+		user.setRole(roleService.getRolebyRoleId(oldUserData.getRole().getRoleId()));
+		user.setEmpId(oldUserData.getEmpId());
+		//user.setCompany(companyService.findActiveCompanyByCompanyId(oldUserData.getCompany().getCompanyId()));
 		user.setPassword(oldUserData.getPassword());
+		
+		
+		
 		return userRepository.save(user);
 	}
 
@@ -325,6 +339,7 @@ public class EmployeeService implements EmployeeServiceInterface {
 		User oldUserData = userRepository.findByUserId(user.getUserId());
 		user.setIsActive(1);
 		user.setPassword(oldUserData.getPassword());
+		user.setRole(roleService.getRolebyRoleId(oldUserData.getRole().getRoleId()));
 		return userRepository.save(user);
 	}
 

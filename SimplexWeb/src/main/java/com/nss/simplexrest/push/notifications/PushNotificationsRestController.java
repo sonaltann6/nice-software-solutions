@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nss.simplexrest.custom.exception.AlreadyExistsException;
 import com.nss.simplexweb.push.notifications.model.PushNotification;
 import com.nss.simplexweb.push.notifications.repository.PushNotificationRepo;
 import com.nss.simplexweb.push.notifications.service.PushNotificationService;
@@ -26,9 +27,14 @@ public class PushNotificationsRestController {
 	
 	@PostMapping(value = "/getDeviceToken")
 	public void getDeviceToken(@RequestBody PushNotification pushNotification) {
-		System.out.println("Device token: " +pushNotification.getDeviveToken());
-		System.out.println("Device platform: " +pushNotification.getDevicePlatform());
-		System.out.println("User: " +pushNotification.getUser().getUserId());
-		pushNotificationRepo.save(pushNotification);
+		PushNotification notification = pushNotificationService.doesDeviceTokenExist(pushNotification.getDeviveToken());
+		if(notification == null) {	
+			System.out.println("Device token: " +pushNotification.getDeviveToken());
+			System.out.println("Device platform: " +pushNotification.getDevicePlatform());
+			System.out.println("User: " +pushNotification.getUser().getUserId());
+			pushNotificationRepo.save(pushNotification);
+		}else {
+			throw new AlreadyExistsException("Device Token", pushNotification.getDeviveToken(), null);
+		}		
 	}
 }

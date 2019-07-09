@@ -141,8 +141,10 @@ public class DocumentManagerController {
          }else {
         	 document = documentUploadService.uploadDocumentAccordingToCategory(files, documentOwnerPartner, documentCategoryId, uploader); 
         	 notificationService.saveNewDocumentNotification(document, 4);
-        	 PushNotification pushNotification = pushNotificationRepo.findByUserUserId(uploader.getUserId());
-     		 pushNotificationService.sendPushNotification(pushNotification,4);
+        	 ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(uploader.getUserId());
+     		 for(PushNotification pushNotification : listPushNotification) {
+     			pushNotificationService.sendPushNotification(pushNotification,4);
+     		}
          }
     	 
     	 return PROJECT.SUCCESS_MSG.name();

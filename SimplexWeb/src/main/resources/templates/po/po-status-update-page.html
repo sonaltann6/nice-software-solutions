@@ -123,7 +123,7 @@
                                     		name="poTrackingComment">
                                     </div>
                                     <div th:each="poStatus : ${PO_NEXT_APPLICABLE_STATUS_TYPE}">
-                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" th:disabled="${poStatus.poStatusName == 'PO Confirmed' && session.USER.role.roleName != 'Director'}" type="submit">
+                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" th:disabled="${poStatus.poStatusName == 'PO Confirmed' && session.USER.role.roleAbbr != 'DIR'}" type="submit">
                                         	<strong>Update</strong>
                                         </button>
                                     </div>

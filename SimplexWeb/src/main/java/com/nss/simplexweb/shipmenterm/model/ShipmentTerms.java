@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nss.simplexweb.user.model.User;
 
 import lombok.AllArgsConstructor;
@@ -43,7 +44,9 @@ public class ShipmentTerms implements Serializable {
 	private String shipmentTermDesc;
 	
 	@ManyToOne
+	//(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	@JoinColumn(name="created_by")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private User createdBy;
 	
 	/*@OneToMany(mappedBy = "shipmentTerms")
@@ -51,4 +54,9 @@ public class ShipmentTerms implements Serializable {
 	
 	@Column(name="is_active", nullable = false, columnDefinition = "int default 1")
 	private int isActive;
+	
+	@Override
+	public String toString(){  
+		  return null;
+	} 
 }

@@ -37,7 +37,7 @@ public class PushNotification implements Serializable{
 	@Column(name="push_notification_id")
 	private Long pushNotificationId;
 	
-	@Column(name="device_token")
+	@Column(name="device_token", unique=true)
 	private String deviveToken;
 	
 	@Column(name="device_platform")

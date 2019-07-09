@@ -31,6 +31,9 @@ import com.nss.simplexweb.enums.DOCUMENT;
 import com.nss.simplexweb.enums.DOCUMENT_CATEGORY_TYPE;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.notifications.service.NotificationService;
+import com.nss.simplexweb.push.notifications.model.PushNotification;
+import com.nss.simplexweb.push.notifications.repository.PushNotificationRepo;
+import com.nss.simplexweb.push.notifications.service.PushNotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.DistributerService;
 import com.nss.simplexweb.user.service.UserService;
@@ -60,6 +63,12 @@ public class DocumentManagerRestController {
 	
 	@Autowired
 	private NotificationService notificationService;
+	
+	@Autowired
+	PushNotificationService pushNotificationService;
+	
+	@Autowired
+	PushNotificationRepo pushNotificationRepo;
 	
 	@GetMapping(value = "/getDocumentManager")
 	@ResponseBody
@@ -101,6 +110,10 @@ public class DocumentManagerRestController {
         }else {
         document =documentUploadService.uploadDocumentByCategory(file, documentOwnerPartner, documentCategoryId, uploader); 
        	notificationService.saveNewDocumentNotification(document, 4);
+       	ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(uploader.getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,4);
+		}
         }
    	 
    	 return PROJECT.SUCCESS_MSG.name();

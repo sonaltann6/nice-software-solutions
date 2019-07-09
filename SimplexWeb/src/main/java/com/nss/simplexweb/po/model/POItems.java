@@ -2,10 +2,8 @@ package com.nss.simplexweb.po.model;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,8 +12,9 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.nss.simplexweb.enquiry.template.model.EnquiryTemplateBean;
 import com.nss.simplexweb.enquiry.template.model.product.ProductModelType;
 
 import lombok.AllArgsConstructor;
@@ -51,19 +50,30 @@ public class POItems implements Serializable {
 	@Column(name="po_item_qty")
 	private Double poItemQty;
 	
+	@ManyToOne
+	@JoinColumn(name="enquiry_id")
+	private EnquiryTemplateBean enquiryId;
+	
 	@Column(name="po_item_rate")
 	private Double poItemRate;
 	
 	@Column(name="po_item_amount")
 	private Double poItemAmount;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
+	//(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "model_type_id")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private ProductModelType productModelType;
 	
-	@JsonIgnore
-	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@ManyToOne
+	//(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name="po_id")
+	@JsonBackReference
     private PODetail poDetail;
+	
+	@Override
+	public String toString(){  
+		  return null;
+	} 
 }

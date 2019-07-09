@@ -319,7 +319,7 @@
 		                          			</div>
 	                          			<!-- Top Type Sub-details -->
 	                          			<div class="form-group">
-	                                   		<label class="col-lg-3 control-label">Stanadard Tie :</label>
+	                                   		<label class="col-lg-3 control-label">Standard Tie :</label>
 		                              		<div class="col-sm-9">
 		                              			<div class="row">
 		                              				<div class="col-sm-4">
@@ -529,7 +529,7 @@
                                    		<label class="col-lg-3 control-label">Loop Type :</label>
 	                              		<div class="col-sm-9">
 							                <select name="loopType" id="loopType" data-placeholder="Choose loop type..." class="form-control" tabindex="1" required="">
-								                <option th:each="loopType : ${ALL_PRESETS.LOOP_TYPE_LIST}" 
+								                <option th:each="loopType : ${ALL_PRESETS.LOOP_TYPE}" 
 								                		th:value="${loopType.loopTypeId}" 
 								                		th:text="${loopType.loopTypeName}"
 								                		th:selected="${loopType.loopTypeId == 1}">

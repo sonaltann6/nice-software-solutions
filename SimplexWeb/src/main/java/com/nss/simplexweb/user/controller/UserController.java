@@ -136,8 +136,9 @@ public class UserController {
 		ModelAndView mav = new ModelAndView();
 		ArrayList<List<?>> list = new ArrayList<List<?>>();
 		list = notificationService.getNotificationByGroup(user.getUserId());
-		mav.addObject(NOTIFICATION.NOTIFICATION_LIST.name(), list).setViewName("notifications.html");
-		// System.out.println(list.toString());
+		mav.addObject(NOTIFICATION.NOTIFICATION_LIST.name(), list)
+		.setViewName("notifications.html");
+		//System.out.println(list.toString());
 		return mav;
 	}
 

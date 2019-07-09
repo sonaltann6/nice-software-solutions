@@ -8,4 +8,5 @@ import com.nss.simplexweb.enquiry.template.model.topfilling.TopType;
 @Repository("topTypeRepository")
 public interface TopTypeRepository extends JpaRepository<TopType, Long>{
 
+	TopType findByTopTypeAbbr(String topType);
 }

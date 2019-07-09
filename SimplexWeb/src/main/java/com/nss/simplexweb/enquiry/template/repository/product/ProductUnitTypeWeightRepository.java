@@ -8,4 +8,7 @@ import com.nss.simplexweb.enquiry.template.model.product.ProductunitTypeWeight;
 @Repository("productUnitTypeWeightRepository")
 public interface ProductUnitTypeWeightRepository extends JpaRepository<ProductunitTypeWeight, Long>{
 
+	
+	//find by product unit weight type
+	ProductunitTypeWeight findByUnitTypeAbbr(String productUnitType);
 }

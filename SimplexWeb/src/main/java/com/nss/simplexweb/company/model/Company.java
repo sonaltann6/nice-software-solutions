@@ -3,8 +3,10 @@ package com.nss.simplexweb.company.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +53,7 @@ public class Company implements Serializable {
 	@Column(name="company_address_pin")
 	private String companyAddressPIN;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="company_address_country")
 	private Country companyAddressCountry;
 	
@@ -70,7 +72,7 @@ public class Company implements Serializable {
 	@Column(name = "created_timestamp", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp createdTimestamp;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name="created_by")
 	@JsonBackReference
 	private User createdBy;
@@ -78,5 +80,8 @@ public class Company implements Serializable {
 	@Column(name = "is_active", nullable = false, columnDefinition = "int default 1")
 	private int isActive;
 	
-	
+	@Override
+	public String toString(){
+		  return null;
+	}
 }

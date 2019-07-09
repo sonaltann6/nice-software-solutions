@@ -106,7 +106,7 @@
 					                    </div>
 					                    <div class="ibox-content" id="ibox-content">
 					                        <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
-					                            <di v class="vertical-timeline-block" th:if="${not #lists.isEmpty(PO_TRACKING_HISTORY_LIST)}" th:each="poTrackingHistory : ${PO_TRACKING_HISTORY_LIST}">
+					                            <div class="vertical-timeline-block" th:if="${not #lists.isEmpty(PO_TRACKING_HISTORY_LIST)}" th:each="poTrackingHistory : ${PO_TRACKING_HISTORY_LIST}">
 					                                
 					                                <div th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'SHIPPED_ON_BOARD'}?'vertical-timeline-icon navy-bg'">
 					                                    <i th:attrappend="class=${poTrackingHistory.poStatus.poStatusAbbr == 'SHIPPED_ON_BOARD'}?'fa fa-smile-o'"></i>

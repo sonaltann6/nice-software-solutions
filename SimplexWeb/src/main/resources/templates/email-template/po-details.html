@@ -45,10 +45,10 @@
 						</td>
 						<td>
 							<div style="margin-left: 15%;">
-								<!-- <h4>PO No.</h4>
+								<h4>PO No.</h4>
 								<h4 class="text-navy">
 									<span th:text="${CONTEXT_.CONTEXT_PO.poNumber}"></span>
-								</h4> -->
+								</h4>
 								<h5>Ship To:</h5>
 								<address>
 									<strong><span th:text="${CONTEXT_.CONTEXT_PO.shiptoCompany}"></span></strong><br></br>
@@ -95,8 +95,8 @@
 								<td><strong> Account # </strong></td>
 								<td><span th:text="${CONTEXT_.CONTEXT_PO.vendorAccountNumber}"></span></td>
 
-								<td><strong> SO # </strong></td>
-								<td><span th:text="${CONTEXT_.CONTEXT_PO.soNumber}"></span></td>
+								<!-- <td><strong> SO # </strong></td>
+								<td><span th:text="${CONTEXT_.CONTEXT_PO.soNumber}"></span></td> -->
 							</tr>
 							<tr>
 								<td><strong> Payment Terms </strong></td>
@@ -134,12 +134,12 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="poItem, rowStat : ${CONTEXT_.CONTEXT_PO.poItmesList}">
+							<tr th:each="poItem, rowStat : ${CONTEXT_.CONTEXT_PO.poItemsList}">
 								<td th:text="${rowStat.index + 1}"></td>
 		                        <td th:text="${poItem.poItemNumber}"></td>
 		                        <td th:text="${poItem.poItemDesc}"></td>
 		                        <td th:text="${poItem.productModelType.modelTypeName}"></td>
-		                        <td th:text="${poItem.poItmeQty}"></td>
+		                        <td th:text="${poItem.poItemQty}"></td>
 		                        <td th:text="${poItem.poItemRate}"></td>
 		                        <td th:text="${poItem.poItemAmount}"></td>
 							</tr>
@@ -168,7 +168,7 @@
 			</div>
 		</div>
 		
-			<!-- <div class="row">
+			<div class="row">
 				<div class="col-md-5">
 					<div class="form-group">
 						<label>Remark</label>
@@ -181,9 +181,9 @@
 				<div class="col-md-2">
 					<span class="form-control" th:text="${CONTEXT_.CONTEXT_PO.poTotalAmount}" style="border: none;"></span>
 				</div>
-			</div> -->
+			</div>
 
-			<!-- /table-responsive -->
+			/table-responsive
 		</div>
 	</div>
 </body>

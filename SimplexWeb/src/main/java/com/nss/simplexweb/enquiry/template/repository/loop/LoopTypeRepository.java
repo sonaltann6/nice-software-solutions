@@ -8,4 +8,5 @@ import com.nss.simplexweb.enquiry.template.model.loop.LoopType;
 @Repository("loopTypeRepository")
 public interface LoopTypeRepository extends JpaRepository<LoopType, Long> {
 
+	LoopType findByLoopTypeAbr(String loopType);
 }

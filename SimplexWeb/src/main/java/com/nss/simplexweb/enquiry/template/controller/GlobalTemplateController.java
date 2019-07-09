@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +29,7 @@ import com.nss.simplexweb.push.notifications.model.PushNotification;
 import com.nss.simplexweb.push.notifications.repository.PushNotificationRepo;
 import com.nss.simplexweb.push.notifications.service.PushNotificationService;
 import com.nss.simplexweb.user.model.User;
+import com.nss.simplexweb.utility.Utility;
 import com.nss.simplexweb.utility.mail.MailBean;
 
 
@@ -94,9 +97,56 @@ public class GlobalTemplateController {
 			enquiryBean = enquiryTemplateService.saveNewEnquiry(enquiryBean);
 		}
 		notificationService.saveNewEnquiryNotification(enquiryBean, 2);
-		PushNotification pushNotification = pushNotificationRepo.findByUserUserId(enquiryBean.getRequester().getUserId());
-		pushNotificationService.sendPushNotification(pushNotification,2);
+		/*ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(enquiryBean.getRequester().getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,2);
+		}*/
 		return new ModelAndView("redirect:" + "/enquiry/globalTemplateController/getGlobalTemplateQuotation?enquiryId="+enquiryBean.getEnquiryId()+"&enquiryNumber="+enquiryBean.getEnquiryNumber());
+	}
+	
+	@RequestMapping(value = "/reEnqGlobalTemplate", method = RequestMethod.POST,consumes="application/json")
+	@ResponseBody
+	public EnquiryTemplateBean reEnqGlobalTemplate(@RequestBody EnquiryTemplateBean enquiryBean, HttpServletRequest request) throws IOException, JSONException {
+		enquiryBean.setRequester(SessionUtility.getUserFromSession(request));
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_4PANEL)) {
+			enquiryTemplateService.performAll4PanelCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_Q_BAFFLE)) {
+			enquiryTemplateService.performAllBaffleCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_CONTAINER_LINER)) {
+			enquiryTemplateService.performAllContainerLinerCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_HOOD)) {
+			enquiryTemplateService.performAllHoodBagCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_PLATEN)) {
+			enquiryTemplateService.performAllPlatenBagCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_SINGLE_LOOP)) {
+			enquiryTemplateService.performAllSingleLoopCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_TUBULAR_CIRCULAR)) {
+			enquiryTemplateService.performAllTubularCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_TWO_LOOP)) {
+			enquiryTemplateService.performAllTwoLoopCalculations(enquiryBean);
+		}
+		if(enquiryBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_UPANEL)) {
+			enquiryTemplateService.performAllUpanelCalculations(enquiryBean);
+		}
+		if(enquiryBean != null) {
+			enquiryBean.setEnquiryNumber(Utility.generateRandomEnquiryNumber(5));
+			enquiryBean.setEnquiryId((long) 0);
+			enquiryBean = enquiryTemplateService.saveNewEnquiry(enquiryBean);
+		}
+		notificationService.saveNewEnquiryNotification(enquiryBean, 2);
+		ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(enquiryBean.getRequester().getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,2);
+		}
+		
+		return enquiryBean;
 	}
 	
 	@RequestMapping(value = "/getGlobalTemplateQuotation", method = RequestMethod.GET)

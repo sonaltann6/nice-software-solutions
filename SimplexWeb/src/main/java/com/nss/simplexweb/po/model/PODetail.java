@@ -14,8 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.transaction.Transactional;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nss.simplexweb.paymentterm.model.PaymentTerms;
 import com.nss.simplexweb.shipmenterm.model.ShipmentTerms;
 import com.nss.simplexweb.user.model.User;
@@ -30,6 +32,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor 
 @NoArgsConstructor
+@Transactional
 @Table(name="po_detail_tbl")
 public class PODetail implements Serializable {
 
@@ -71,7 +74,8 @@ public class PODetail implements Serializable {
 		@Column(name="vendor_account_number")
 		private String vendorAccountNumber;
 		
-		@ManyToOne(fetch = FetchType.EAGER)
+		@ManyToOne
+		//(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "payment_term_id")
 		private PaymentTerms paymentTerms;
 		
@@ -83,12 +87,13 @@ public class PODetail implements Serializable {
 		private DeliveryMethod deliveryMethod;*/
 		private String deliveryMethod;
 		
-		@ManyToOne(fetch = FetchType.EAGER)
+		@ManyToOne
+		//(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "shipping_term_id")
 		private ShipmentTerms shippingTerms;
 		
-		@Column(name="so_number")
-		private String soNumber;
+		/*@Column(name="so_number")
+		private String soNumber;*/
 		
 		@Column(name="purchasing_contact")
 		private String purchasingContact;
@@ -98,7 +103,8 @@ public class PODetail implements Serializable {
 	
 		
 	/* --PO Items Details-- */
-		@OneToMany(mappedBy="poDetail", fetch = FetchType.EAGER)
+		@OneToMany(mappedBy="poDetail")//, fetch = FetchType.EAGER)
+		@JsonManagedReference
 		@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 		private List<POItems> poItemsList;
 		
@@ -133,4 +139,9 @@ public class PODetail implements Serializable {
 	
 	@Column(name = "po_create_timestamp", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Timestamp poCreateTimestamp;
+	
+	@Override
+	public String toString(){  
+		  return null;
+	} 
 }

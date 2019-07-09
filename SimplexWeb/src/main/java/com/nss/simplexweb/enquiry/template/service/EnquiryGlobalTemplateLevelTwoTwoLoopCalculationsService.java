@@ -528,7 +528,7 @@ public class EnquiryGlobalTemplateLevelTwoTwoLoopCalculationsService {
 				}
 			}
 			if (result) {
-				double additionalValue = 150;
+				double additionalValue = 0;
 
 				totalCost = totalCost + bagDBRWCost;
 				System.out.println("bagRawMaterialCost : "+bagDBRWCost);
@@ -586,7 +586,7 @@ public class EnquiryGlobalTemplateLevelTwoTwoLoopCalculationsService {
 				}
 
 				// checking fabric color count
-				if (fabricColorCount > 0) {
+				if (fabricColorCount > 1) {
 					totalCost = totalCost + colorFabricDBCost;
 					System.out.println("colorFabricDBCost : "+totalCost);
 				}

@@ -41,7 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	ArrayList<User> findByRoleInAndIsActiveAndEmpIdIsNotNull(ArrayList<Role> roles, int isActive);
 	
 	
-	//Read (Distributer	
+	//Read (Distributer)
 	ArrayList<User> findByIsActiveAndEmpIdIsNull(int isActive);
 	
 	ArrayList<User> findByManagerIdAndIsActiveAndEmpIdIsNull(Long managerId, int isActive);

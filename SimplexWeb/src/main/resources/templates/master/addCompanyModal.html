@@ -3,7 +3,7 @@
         <div class="modal inmodal fade reset-on-hide" id="addCompanyModal" tabindex="-1" role="dialog"  aria-hidden="true" data-modal-type="NEW" data-reset-on-close="true">
 	        <div class="modal-dialog modal-lg">
 	            <div class="modal-content">
-		            <form class="m-t" id="addCompanyForm" role="form" autocomplete="off" th:object="${COMPANY}" th:action="@{/master/companyMaster/saveNewCompany}" method="POST">
+		            <form class="m-t" id="addCompanyForm" role="form" autocomplete="off" th:object="${COMPANY}">
 		                <div class="modal-header">
 		                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 		                    <h4 class="modal-title">Add Company</h4>
@@ -59,7 +59,7 @@
 									<div class="form-group">
 										<label>Registration Code</label> 
 										<input type="text" th:name="companyUniqueCode" class="form-control" data-mask="***-***-***" 
-											placeholder="Unique registration code" required="" readonly="readonly">
+											placeholder="Unique registration code" required="required" >
 									</div>
 								</div>
 							</div>
@@ -68,7 +68,7 @@
 	
 						<div class="modal-footer">
 		                    <button type="button" class="btn btn-white btn-sm" data-dismiss="modal">Close</button>
-		                    <button type="submit" class="btn btn-primary btn-sm saveNewCompanyBtn">Save</button>
+		                    <button type="submit" data-save-type="NEW" class="btn btn-primary btn-sm saveCompanyBtn">Save</button>
 		                </div>
 		            </form>
 	            </div>

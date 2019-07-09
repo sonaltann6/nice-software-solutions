@@ -1,13 +1,14 @@
 package com.nss.simplexrest.user.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +60,8 @@ public class UserControllerRest {
     }
     
     
-    @PostMapping(value = "/registration")
+    @SuppressWarnings("null")
+	@PostMapping(value = "/registration")
     public User registerDistributer(@RequestBody @Valid User user, BindingResult bindingResult) {
         User userExists = userService.findUserByEmailId(user.getEmail());
         Company company = userService.checkCompanyCode(user.getCompany().getCompanyUniqueCode());
@@ -68,7 +70,7 @@ public class UserControllerRest {
         	throw new AlreadyExistsException("User", "email : " + user.getEmail(), null);
         }
         else if (company == null) {
-        	throw new NotFoundException("Company", "Company Code : " +user.getCompany().getCompanyUniqueCode(), null);
+        	throw new NotFoundException("Company", "Company Code : " +company.getCompanyUniqueCode(), null);
         }
         else {
         	user = userService.processUseNameBeforeSaving(user);
@@ -133,9 +135,9 @@ public class UserControllerRest {
     @GetMapping("/doesEmailExist")
     @ApiOperation(value = "Returns boolean (true/false) for user existence"
 	, notes = "user id of user whose password is to be checked")
-    public boolean doesEmailExist(@RequestBody User user) {
-    	if (!userService.checkIfUserExistsByEmailId(user.getEmail()))
-    		throw new NotFoundException("User", "Email : " + user.getEmail(), null);
+    public boolean doesEmailExist(@RequestParam ("email") String email) {
+    	if (!userService.checkIfUserExistsByEmailId(email))
+    		throw new NotFoundException("User", "Email : " + email, null);
     		
     	return true;
     }
@@ -153,21 +155,21 @@ public class UserControllerRest {
     @PutMapping("/resetPassword")
     @ApiOperation(value = "Returns boolean (true/false) for user existence"
 	, notes = "user id of user whose password is to be checked")
-    public User uptadePassword(@RequestBody User user) {
-    	User existingUser = userService.findUserByUserId(user.getUserId());
+    public User uptadePassword(@RequestParam ("email") String email) {
+    	User existingUser = userService.findUserByEmailId(email);
     	if (!userService.checkIfUserExistsByUserId(existingUser.getUserId()))
     		throw new NotFoundException("User", "Email : " + existingUser.getUserId(), null);
     	return userService.resetUserPassword(existingUser);
     }
     
     @PutMapping(value = "/changePassword")
-    public Object changePassword(@RequestParam ("userId") Long userId, @RequestParam ("newPassword") String newPassword, HttpSession session) throws JSONException {
-    	JSONObject obj = new JSONObject();
+    public Map<String,Object> changePassword(@RequestParam ("userId") Long userId, @RequestParam ("newPassword") String newPassword, HttpSession session) throws JSONException {
+    	Map<String,Object> map = new HashMap<String, Object>();
     	User user  = userService.findUserByUserId(userId);
     	userService.changeUserPassword(user, newPassword);
-    	obj.put(PROJECT.SUCCESS_MSG.name(), "Please login again with new password");
-    	obj.put(USER.USER.name(), new User());
+    	map.put(PROJECT.SUCCESS_MSG.name(), "Please login again with new password");
+    	map.put(USER.USER.name(), new User());
     	session.invalidate();
-    	return obj.toString();
+    	return map;
     }
 }

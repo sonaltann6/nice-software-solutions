@@ -1,5 +1,6 @@
 package com.nss.simplexrest.enquiry.template.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nss.simplexweb.enquiry.template.model.EnquiryTemplateBean;
@@ -21,8 +23,12 @@ import com.nss.simplexweb.enquiry.template.service.TemplatePresetsService;
 import com.nss.simplexweb.enums.ENQUIRY;
 import com.nss.simplexweb.enums.PROJECT;
 import com.nss.simplexweb.notifications.service.NotificationService;
+import com.nss.simplexweb.push.notifications.model.PushNotification;
+import com.nss.simplexweb.push.notifications.repository.PushNotificationRepo;
+import com.nss.simplexweb.push.notifications.service.PushNotificationService;
 import com.nss.simplexweb.user.model.User;
 import com.nss.simplexweb.user.service.UserService;
+import com.nss.simplexweb.utility.Utility;
 import com.nss.simplexweb.utility.mail.MailBean;
 
 import io.swagger.annotations.Api;
@@ -44,13 +50,19 @@ public class GlobalTemplateRestController {
 	@Autowired
 	private NotificationService notificationService;
 	
+	@Autowired
+	PushNotificationRepo pushNotificationRepo;
+	
+	@Autowired
+	PushNotificationService pushNotificationService;
+	
 	@GetMapping(value = "/getGlobalTemplate")
 	public Map<String, List<?>> getGlobalTemplate() {
 		return templatePresetsService.getAllPresets();
 	}
 	
 	@PostMapping(value = "/saveGlobalTemplateDetails")
-	public EnquiryTemplateBean saveGlobalTemplateDetails(@RequestBody EnquiryTemplateBean enquiryTemplateBean) {
+	public EnquiryTemplateBean saveGlobalTemplateDetails(@RequestBody EnquiryTemplateBean enquiryTemplateBean) throws IOException {
 		//enquiryTemplateBean.setRequester(user);
 		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_4PANEL)) {
 			enquiryTemplateService.performAll4PanelCalculations(enquiryTemplateBean);
@@ -83,6 +95,53 @@ public class GlobalTemplateRestController {
 			enquiryTemplateService.saveNewEnquiry(enquiryTemplateBean);
 		}	
 		notificationService.saveNewEnquiryNotification(enquiryTemplateBean, 2);
+		ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(enquiryTemplateBean.getRequester().getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,2);
+		}
+		return enquiryTemplateBean;
+	}
+	@PostMapping(value = "/reEnqGlobalTemplate")
+	@ResponseBody
+	public EnquiryTemplateBean reEnqGlobalTemplate(@RequestBody EnquiryTemplateBean enquiryTemplateBean) throws IOException {
+		//enquiryTemplateBean.setRequester(user);
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_4PANEL)) {
+			enquiryTemplateService.performAll4PanelCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_Q_BAFFLE)) {
+			enquiryTemplateService.performAllBaffleCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_CONTAINER_LINER)) {
+			enquiryTemplateService.performAllContainerLinerCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_HOOD)) {
+			enquiryTemplateService.performAllHoodBagCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_PLATEN)) {
+			enquiryTemplateService.performAllPlatenBagCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_SINGLE_LOOP)) {
+			enquiryTemplateService.performAllSingleLoopCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_TUBULAR_CIRCULAR)) {
+			enquiryTemplateService.performAllTubularCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_TWO_LOOP)) {
+			enquiryTemplateService.performAllTwoLoopCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean.getProductModelType().getModelTypeAbbr().equalsIgnoreCase(ENQUIRY.MODEL_TYPE_UPANEL)) {
+			enquiryTemplateService.performAllUpanelCalculations(enquiryTemplateBean);
+		}
+		if(enquiryTemplateBean != null) {
+			enquiryTemplateBean.setEnquiryNumber(Utility.generateRandomEnquiryNumber(5));
+			enquiryTemplateBean.setEnquiryId((long) 0);
+			enquiryTemplateBean = enquiryTemplateService.saveNewEnquiry(enquiryTemplateBean);
+		}	
+		notificationService.saveNewEnquiryNotification(enquiryTemplateBean, 2);
+		ArrayList<PushNotification> listPushNotification = pushNotificationRepo.findByUserUserId(enquiryTemplateBean.getRequester().getUserId());
+		for(PushNotification pushNotification : listPushNotification) {
+			pushNotificationService.sendPushNotification(pushNotification,2);
+		}
 		return enquiryTemplateBean;
 	}
 	

@@ -71,7 +71,7 @@
 											<tr th:each="dist, rowStat : ${DISTRIBUTER_LIST}">
 												<td th:text="${rowStat.index + 1}"></td>
 												<td th:text="${dist.FullName}"></td>
-												<td th:text="${dist.companyName}"></td>
+												<td th:text="${dist.company.companyName}"></td>
 												<td
 													th:text="${dist.Country.countryName + ' (' + dist.Country.isdCode + ')' }"></td>
 												<td th:text="${dist.email}"></td>

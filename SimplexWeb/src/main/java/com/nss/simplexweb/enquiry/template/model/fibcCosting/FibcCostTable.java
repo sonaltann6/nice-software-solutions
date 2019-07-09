@@ -3,6 +3,8 @@ package com.nss.simplexweb.enquiry.template.model.fibcCosting;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.nss.simplexweb.user.model.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,8 +23,14 @@ import lombok.NoArgsConstructor;
 @Table(name="fibc_cost_table")
 @NamedQuery(name="FibcCostTable.findAll", query="SELECT f FROM FibcCostTable f")
 public class FibcCostTable implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="sr_no")
+	private int srNo;
+	
 	@Column(name="cost_unit")
 	private String costUnit;
 
@@ -35,14 +43,8 @@ public class FibcCostTable implements Serializable {
 	@Column(name="item_name")
 	private String itemName;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="sr_no")
-	private int srNo;
-
-	@Column(name="user_id")
-	private Long userId;
-
-	
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private User userId;
 
 }

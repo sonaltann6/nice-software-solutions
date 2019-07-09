@@ -8,4 +8,7 @@ import com.nss.simplexweb.enquiry.template.model.fabric.FabricType;
 @Repository("fabricTypeRepositoy")
 public interface FabricTypeRepositoy extends JpaRepository<FabricType, Long>{
 
+	
+	//find by fabric type
+	FabricType findByfabricTypeAbbr(String fabricType);
 }

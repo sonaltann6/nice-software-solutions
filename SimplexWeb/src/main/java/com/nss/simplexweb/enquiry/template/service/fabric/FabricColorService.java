@@ -1,5 +1,6 @@
 package com.nss.simplexweb.enquiry.template.service.fabric;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,16 @@ import org.springframework.stereotype.Service;
 
 import com.nss.simplexweb.enquiry.template.model.fabric.FabricColor;
 import com.nss.simplexweb.enquiry.template.repository.fabric.FabricColorRepository;
+import com.nss.simplexweb.enquiry.template.repository.fabric.FabricMixColorRepository;
 
 @Service("fabricColorService")
 public class FabricColorService {
 
 	@Autowired
 	private FabricColorRepository fabricColorRepository;
+	
+	@Autowired
+	FabricMixColorRepository fabricMixColorRepository;
 	
 	public FabricColorService(FabricColorRepository fabricColorRepository) {
 		// TODO Auto-generated constructor stub
@@ -22,5 +27,12 @@ public class FabricColorService {
 	public List<FabricColor> getFabricColorList() {
 		// TODO Auto-generated method stub
 		return fabricColorRepository.findAll();
+	}
+	
+	public List<Object> getABCFabricColorList() {
+		List<Object> list = new ArrayList<>();
+		list.add(fabricColorRepository.findAll());
+		list.add(fabricMixColorRepository.findAll());
+		return list;
 	}
 }

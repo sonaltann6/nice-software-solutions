@@ -24,7 +24,11 @@ $(document).ready(function(){
 	});
 	
 	$('.dowmloadEnquiryQuotationBtn').on('click', function(){
-		var url = contextRoot+"enquiry/globalTemplateController/downloadGlobalTemplateQuotation?enquiryId=4&enquiryNumber=Enq-98079435";
+		var enqNum = $('.ENQUIRY_NUMBER').html();
+		var enqId = $('.ENQUIRY_ID').html();
+		console.log(enqNum);
+		console.log(enqId)
+		var url = contextRoot+"enquiry/globalTemplateController/downloadGlobalTemplateQuotation?enquiryId=" +enqId +"&enquiryNumber=" +enqNum;
 		
 		var win = window.open(url);
 		if (win) {

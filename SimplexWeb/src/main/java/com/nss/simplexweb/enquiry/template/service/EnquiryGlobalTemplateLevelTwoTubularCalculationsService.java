@@ -518,7 +518,7 @@ public class EnquiryGlobalTemplateLevelTwoTubularCalculationsService {
 				}
 			}
 			if (result) {
-				double additionalValue = 150;
+				double additionalValue = 0;
 
 				totalCost = totalCost + bagDBRWCost;
 				System.out.println("bagRawMaterialCost : "+bagDBRWCost);
@@ -576,7 +576,7 @@ public class EnquiryGlobalTemplateLevelTwoTubularCalculationsService {
 				}
 
 				// checking fabric color count
-				if (fabricColorCount > 0) {
+				if (fabricColorCount > 1) {
 					totalCost = totalCost + colorFabricDBCost;
 					System.out.println("colorFabricDBCost : "+totalCost);
 				}
@@ -821,7 +821,13 @@ public class EnquiryGlobalTemplateLevelTwoTubularCalculationsService {
 				enquiryTemplateBean.getProductSFtype().getSfTypeValue());
 		
 		if(enquiryTemplateBean.getLoopType().getLoopTypeAbr().equalsIgnoreCase(ENQUIRY.LOOP_TYPE_CORNER_LOOP)) {
-			double loopGram = ((enquiryTemplateBean.getSwl() * enquiryTemplateBean.getProductSFtype().getSfTypeValue()) / enquiryTemplateBean.getLoopNumber())/ 40;
+			//double loopGram = ((enquiryTemplateBean.getSwl() * enquiryTemplateBean.getProductSFtype().getSfTypeValue()) / enquiryTemplateBean.getLoopNumber())/ 40;
+			double loopGram = 0;
+			if(enquiryTemplateBean.getProductSFtype().getSfTypeValue() > 5) {
+				loopGram = setCornerLoopGramFromRange(enquiryTemplateBean.getSwl());
+			}else {
+				loopGram = setCornerLoopGramSFFiveFromRange(enquiryTemplateBean.getSwl());
+			}
 			double cornerLoop = (4 * (loopGram * loopCutLength)) / 100;
 			System.out.println("corner loop: "+cornerLoop);
 			return cornerLoop;
@@ -973,6 +979,69 @@ public class EnquiryGlobalTemplateLevelTwoTubularCalculationsService {
 	        }else{
 	        	return 0;
 	        }
+		}
+		
+		//2c
+		//2.c.1
+		private double setCornerLoopGramFromRange(double bagSWL) {
+			if (bagSWL <= 499) {
+	         	return 25 ;
+	         } else if (bagSWL >= 500 && bagSWL <= 749) {
+	        	 return 25;
+	         } else if (bagSWL >= 750 && bagSWL <= 850) {
+	        	 return 32;
+	         } else if (bagSWL >= 851 && bagSWL <= 1000) {
+	        	 return 35;
+	         } else if (bagSWL >= 1001 && bagSWL <= 1100) {
+	        	 return 35;
+	         } else if (bagSWL >= 1101 && bagSWL <= 1250) {
+	        	 return 42;
+	         }else if (bagSWL >= 1251 && bagSWL <= 1300) {
+	        	 return  42;
+	         }else if (bagSWL >= 1301 && bagSWL <= 1500) {
+	        	 return  55;
+	         }else if (bagSWL >= 1501 && bagSWL <= 1650) {
+	        	 return  55;
+	         }else if (bagSWL >= 1651 && bagSWL <= 1800) {
+	        	 return  60;
+	         }else if (bagSWL >= 1801 && bagSWL <= 2000) {
+	        	 return  65;
+	         }else if (bagSWL > 2000) {
+	        	 return 65;
+	         }else{
+	        	 return 0;
+	         }
+		}
+		
+		//2.c.2
+		private double setCornerLoopGramSFFiveFromRange(double bagSWL) {
+			if (bagSWL <= 499) {
+	         	return 25 ;
+	         } else if (bagSWL >= 500 && bagSWL <= 749) {
+	        	 return 25;
+	         } else if (bagSWL >= 750 && bagSWL <= 850) {
+	        	 return 25;
+	         } else if (bagSWL >= 851 && bagSWL <= 1000) {
+	        	 return 32;
+	         } else if (bagSWL >= 1001 && bagSWL <= 1100) {
+	        	 return 35;
+	         } else if (bagSWL >= 1101 && bagSWL <= 1250) {
+	        	 return 35;
+	         }else if (bagSWL >= 1251 && bagSWL <= 1300) {
+	        	 return  35;
+	         }else if (bagSWL >= 1301 && bagSWL <= 1500) {
+	        	 return  42;
+	         }else if (bagSWL >= 1501 && bagSWL <= 1650) {
+	        	 return  42;
+	         }else if (bagSWL >= 1651 && bagSWL <= 1800) {
+	        	 return  55;
+	         }else if (bagSWL >= 1801 && bagSWL <= 2000) {
+	        	 return  60;
+	         }else if (bagSWL > 2000) {
+	        	 return 60;
+	         }else{
+	        	 return 0;
+	         }
 		}
 	// 3. Calculate Attachment Inlet
 	// 3.a. Top Skirt
